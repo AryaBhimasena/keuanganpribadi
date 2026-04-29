@@ -2,7 +2,7 @@ body {
   margin: 0;
   background: #f5f7fb;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* WRAPPER */
@@ -11,15 +11,14 @@ body {
   justify-content: center;
   align-items: center;
 
-  min-height: 100vh;
-  overflow: hidden;
+  min-height: 100dvh;
 }
 
 /* MOBILE FRAME */
 .mobile-frame {
   width: 100%;
   max-width: 390px;
-  height: 100vh;
+  height: 100dvh;
   padding: 16px;
 
   background: white;
@@ -31,7 +30,6 @@ body {
 
 .page-content {
   height: 100%;
-  overflow: hidden;
-
-  padding-bottom: 80px; /* ruang untuk bottom nav mobile app design */
+  overflow-y: auto;
+  padding-bottom: 90px;
 }

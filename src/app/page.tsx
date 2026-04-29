@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { getWeeklyTarget } from "@/lib/api";
 import "@/styles/home.css";
 
 const days: string[] = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
@@ -10,6 +10,12 @@ export default function HomePage() {
   const today: Date = new Date();
   const [weekOffset, setWeekOffset] = useState<number>(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const [weekData, setWeekData] = useState<{
+    day: string;
+    date: Date;
+    target: number;
+  }[]>([]);
 
   // ================= FORMAT =================
   const formatNumber = (num: number): string =>
@@ -37,20 +43,26 @@ export default function HomePage() {
 
   const startOfWeek: Date = getStartOfWeek(weekOffset);
 
-  const weekData: {
-    day: string;
-    date: Date;
-    target: number;
-  }[] = days.map((d, i) => {
-    const date = new Date(startOfWeek);
-    date.setDate(startOfWeek.getDate() + i);
+  // ================= FETCH DATA =================
+  useEffect(() => {
+    const fetchWeekly = async () => {
+      try {
+        const res = await getWeeklyTarget(weekOffset);
 
-    return {
-      day: d,
-      date,
-      target: 1500000 + i * 500000,
+        const mapped = res.data.map((item: any) => ({
+          day: item.hari,
+          date: new Date(item.date),
+          target: item.target,
+        }));
+
+        setWeekData(mapped);
+      } catch (err) {
+        console.error("Failed fetch weekly target:", err);
+      }
     };
-  });
+
+    fetchWeekly();
+  }, [weekOffset]);
 
   // ================= SCROLL =================
   const scroll = (dir: "next" | "prev"): void => {
@@ -161,16 +173,6 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* NAV ICON */}
-          <div className="week-nav">
-            <button onClick={() => scroll("prev")}>
-              <ChevronLeft size={20} />
-            </button>
-            <button onClick={() => scroll("next")}>
-              <ChevronRight size={20} />
-            </button>
           </div>
 
           {/* MONTHLY */}
