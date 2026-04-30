@@ -50,3 +50,21 @@ export async function getWeeklyTarget(offset = 0) {
 export async function getMonthlyTarget() {
   return apiGet("monthlyTarget");
 }
+
+// ================= PENDAPATAN =================
+export async function getTodayIncome() {
+  const res = await fetch(`${BASE_URL}?action=todayIncome`);
+  return res.json();
+}
+
+// ================= PENGELUARAN =================
+export async function getTodayExpense() {
+  const res = await fetch(`${BASE_URL}?action=todayExpense`);
+  return res.json();
+}
+
+// ================= BALANCE =================
+export async function getBalance() {
+  const res = await fetch(`${BASE_URL}?action=balance`);
+  return res.json();
+}
