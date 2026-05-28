@@ -25,6 +25,8 @@ type HistoryItem = {
 type InputModalProps = {
   open: boolean;
   type: InputType;
+  initialDate: Date | null;
+  onSuccess: () => Promise<void>;
   onClose: () => void;
 };
 
@@ -34,6 +36,8 @@ const BASE_URL =
 export default function InputModal({
   open,
   type,
+  initialDate,
+  onSuccess,
   onClose,
 }: InputModalProps) {
 
@@ -472,6 +476,7 @@ export default function InputModal({
         }
 
         await fetchHistory();
+		await onSuccess();
 
         resetForm();
 
@@ -534,6 +539,7 @@ export default function InputModal({
         }
 
         await fetchHistory();
+		await onSuccess();
 
         resetForm();
 
@@ -551,6 +557,26 @@ export default function InputModal({
     historyData.length === 0;
 
   if (!open) return null;
+
+useEffect(() => {
+
+  if (initialDate) {
+
+    const formatted =
+      initialDate
+        .toISOString()
+        .split("T")[0];
+
+    setSelectedDate(
+      formatted
+    );
+
+    syncDateFields(
+      formatted
+    );
+  }
+
+}, [initialDate]);
 
   return (
     <div

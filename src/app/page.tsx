@@ -661,7 +661,7 @@ export default function HomePage() {
           inputModalType ||
           "income"
         }
-        selectedDate={
+        initialDate={
           selectedDetailDate
         }
         onSuccess={
