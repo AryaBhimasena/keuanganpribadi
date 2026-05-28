@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "@/styles/mobile-frame.css";
-import BottomNav from "@/components/BottomNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +28,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-[#f5f7fb]">
         <div className="app-wrapper">
-          <div className="mobile-frame">
             <main className="page-content">{children}</main>
-          <BottomNav />
-          </div>
         </div>
       </body>
     </html>

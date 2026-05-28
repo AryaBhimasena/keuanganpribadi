@@ -1,311 +1,677 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import {
-  getWeeklyTarget,
-  getTodayIncome,
-  getTodayExpense,
-  getBalance
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+import {
+  getMonthlyIncome,
+  getMonthlyExpense,
 } from "@/lib/api";
+
+import InputModal from "@/components/InputModal";
+
+import DashboardSlider from "@/components/DashboardSlider";
+
 import "@/styles/home.css";
 
-const days: string[] = [
-  "Senin",
-  "Selasa",
-  "Rabu",
-  "Kamis",
-  "Jumat",
-  "Sabtu",
-  "Minggu"
+type CalendarDay = {
+  date: Date;
+  currentMonth: boolean;
+  income: number;
+  expense: number;
+};
+
+type IncomeItem = {
+  rowIndex?: number;
+  tanggal: number;
+  bulan: number;
+  tahun: number;
+  pendapatan: number;
+  keterangan: string;
+};
+
+type ExpenseItem = {
+  rowIndex?: number;
+  tanggal: number;
+  bulan: number;
+  tahun: number;
+  pengeluaran: number;
+  keterangan: string;
+};
+
+type InputModalType =
+  | "income"
+  | "expense"
+  | null;
+
+const DAYS = [
+  "Sen",
+  "Sel",
+  "Rab",
+  "Kam",
+  "Jum",
+  "Sab",
+  "Min",
 ];
 
 export default function HomePage() {
-  const [now, setNow] = useState<Date>(new Date());
-  const [weekOffset, setWeekOffset] = useState<number>(0);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // ================= STATE =================
-  const [todayIncome, setTodayIncome] = useState<number>(0);
-  const [todayExpense, setTodayExpense] = useState<number>(0);
-  const [balance, setBalance] = useState<number>(0);
+  const [selectedMonth,
+    setSelectedMonth] =
+    useState(new Date());
 
-  const [loadingIncome, setLoadingIncome] = useState<boolean>(true);
-  const [loadingExpense, setLoadingExpense] = useState<boolean>(true);
-  const [loadingBalance, setLoadingBalance] = useState<boolean>(true);
-  const [loadingWeekly, setLoadingWeekly] = useState<boolean>(true);
+  const [incomeData,
+    setIncomeData] =
+    useState<IncomeItem[]>([]);
 
-  const [weekData, setWeekData] = useState<
-    { day: string; date: Date; target: number }[]
-  >([]);
+  const [expenseData,
+    setExpenseData] =
+    useState<ExpenseItem[]>([]);
 
-  // ================= REALTIME CLOCK =================
+  const [loadingCalendar,
+    setLoadingCalendar] =
+    useState(true);
+
+  const [inputModalType,
+    setInputModalType] =
+    useState<InputModalType>(
+      null
+    );
+
+  const [selectedDetailDate,
+    setSelectedDetailDate] =
+    useState<Date | null>(
+      null
+    );
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date());
-    }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+    fetchMonthlyCalendar();
 
-  // ================= FORMAT =================
-  const formatNumber = (num: number): string =>
+  }, [selectedMonth]);
+
+  const fetchMonthlyCalendar =
+    async () => {
+
+      try {
+
+        setLoadingCalendar(true);
+
+        const bulan =
+          selectedMonth.getMonth() + 1;
+
+        const tahun =
+          selectedMonth.getFullYear();
+
+        const [
+          incomeResponse,
+          expenseResponse,
+        ] =
+          await Promise.all([
+            getMonthlyIncome(
+              bulan,
+              tahun
+            ),
+
+            getMonthlyExpense(
+              bulan,
+              tahun
+            ),
+          ]);
+
+        if (
+          incomeResponse.success
+        ) {
+
+          setIncomeData(
+            incomeResponse.data ||
+              []
+          );
+
+        } else {
+
+          setIncomeData([]);
+        }
+
+        if (
+          expenseResponse.success
+        ) {
+
+          setExpenseData(
+            expenseResponse.data ||
+              []
+          );
+
+        } else {
+
+          setExpenseData([]);
+        }
+
+      } catch (err) {
+
+        console.error(err);
+
+        setIncomeData([]);
+        setExpenseData([]);
+
+      } finally {
+
+        setLoadingCalendar(false);
+
+      }
+    };
+
+  const formatNumber = (
+    num: number
+  ) =>
     num.toLocaleString("id-ID");
 
-  const formatDate = (date: Date): string =>
-    date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "short",
-    });
-
-  const formatFullDateTime = (date: Date): string =>
-    date.toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }) +
-    " • " +
-    date.toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-
-  const formatMonth = (date: Date): string =>
-    date.toLocaleDateString("id-ID", {
-      month: "long",
-      year: "numeric",
-    });
-
-  // ================= WEEK =================
-  const getStartOfWeek = (offset: number = 0): Date => {
-    const d = new Date(now);
-    const day = d.getDay() || 7;
-    d.setDate(d.getDate() - day + 1 + offset * 7);
-    return d;
-  };
-
-  const startOfWeek = getStartOfWeek(weekOffset);
-
-  // ================= FETCH WEEKLY =================
-  useEffect(() => {
-    const fetchWeekly = async () => {
-      try {
-        setLoadingWeekly(true);
-
-        const res = await getWeeklyTarget(weekOffset);
-
-        const mapped = res.data.map((item: any) => ({
-          day: item.hari,
-          date: new Date(item.date),
-          target: item.target,
-        }));
-
-        setWeekData(mapped);
-      } catch (err) {
-        console.error("Failed fetch weekly target:", err);
-      } finally {
-        setLoadingWeekly(false);
+  const formatCompact = (
+    num: number
+  ) =>
+    new Intl.NumberFormat(
+      "id-ID",
+      {
+        notation: "compact",
+        maximumFractionDigits: 1,
       }
+    ).format(num);
+
+  const formatMonth = (
+    date: Date
+  ) =>
+    date.toLocaleDateString(
+      "id-ID",
+      {
+        month: "long",
+        year: "numeric",
+      }
+    );
+
+  const handlePrevMonth =
+    () => {
+
+      setSelectedMonth(
+        (prev) => {
+
+          const next =
+            new Date(prev);
+
+          next.setMonth(
+            prev.getMonth() - 1
+          );
+
+          return next;
+        }
+      );
     };
 
-    fetchWeekly();
-  }, [weekOffset]);
+  const handleNextMonth =
+    () => {
 
-  // ================= FETCH INCOME =================
-  useEffect(() => {
-    const fetchIncome = async () => {
-      try {
-        setLoadingIncome(true);
-        const res = await getTodayIncome();
-        setTodayIncome(res.data.income || 0);
-      } catch (err) {
-        console.error("Failed fetch income:", err);
-      } finally {
-        setLoadingIncome(false);
-      }
+      setSelectedMonth(
+        (prev) => {
+
+          const next =
+            new Date(prev);
+
+          next.setMonth(
+            prev.getMonth() + 1
+          );
+
+          return next;
+        }
+      );
     };
 
-    fetchIncome();
-  }, []);
+  const openIncomeModal =
+    () => {
 
-  // ================= FETCH EXPENSE =================
-  useEffect(() => {
-    const fetchExpense = async () => {
-      try {
-        setLoadingExpense(true);
-        const res = await getTodayExpense();
-        setTodayExpense(res.data.expense || 0);
-      } catch (err) {
-        console.error("Failed fetch expense:", err);
-      } finally {
-        setLoadingExpense(false);
-      }
+      setSelectedDetailDate(
+        null
+      );
+
+      setInputModalType(
+        "income"
+      );
     };
 
-    fetchExpense();
-  }, []);
+  const openExpenseModal =
+    () => {
 
-  // ================= FETCH BALANCE =================
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        setLoadingBalance(true);
-        const res = await getBalance();
-        setBalance(res.data.balance || 0);
-      } catch (err) {
-        console.error("Failed fetch balance:", err);
-      } finally {
-        setLoadingBalance(false);
-      }
+      setSelectedDetailDate(
+        null
+      );
+
+      setInputModalType(
+        "expense"
+      );
     };
 
-    fetchBalance();
-  }, []);
+  const handleOpenDetail =
+    (date: Date) => {
 
-  // ================= TODAY TARGET =================
-  const todayTarget =
-    weekData.find(
-      (d) => d.date.toDateString() === now.toDateString()
-    )?.target || 0;
+      setSelectedDetailDate(
+        date
+      );
 
-  // ✅ REAL CALCULATION
-  const remaining =
-    todayTarget + todayIncome - todayExpense;
+      setInputModalType(
+        "income"
+      );
+    };
 
-  // ================= DATA =================
-  const todayData = {
-    target: todayTarget,
-    income: todayIncome,
-    expense: todayExpense,
-  };
+  const closeInputModal =
+    () => {
 
-  const monthlyTarget = 10000000;
-  const monthlyAchieved = 4200000;
-  const monthlyRemaining = monthlyTarget - monthlyAchieved;
+      setInputModalType(
+        null
+      );
+
+      setSelectedDetailDate(
+        null
+      );
+    };
+
+  const handleSuccess =
+    async () => {
+
+      await fetchMonthlyCalendar();
+    };
+
+  const calendarDays =
+    useMemo(() => {
+
+      const year =
+        selectedMonth.getFullYear();
+
+      const month =
+        selectedMonth.getMonth();
+
+      const firstDay =
+        new Date(
+          year,
+          month,
+          1
+        );
+
+      let startDay =
+        firstDay.getDay();
+
+      if (startDay === 0) {
+        startDay = 7;
+      }
+
+      const daysInMonth =
+        new Date(
+          year,
+          month + 1,
+          0
+        ).getDate();
+
+      const totalCells =
+        startDay - 1 +
+        daysInMonth;
+
+      const totalRows =
+        totalCells <= 35
+          ? 35
+          : 42;
+
+      const startDate =
+        new Date(firstDay);
+
+      startDate.setDate(
+        firstDay.getDate() -
+          startDay +
+          1
+      );
+
+      const result:
+        CalendarDay[] = [];
+
+      for (
+        let i = 0;
+        i < totalRows;
+        i++
+      ) {
+
+        const date =
+          new Date(startDate);
+
+        date.setDate(
+          startDate.getDate() + i
+        );
+
+        const incomeList =
+          incomeData.filter(
+            (item) =>
+              item.tanggal ===
+                date.getDate() &&
+              item.bulan ===
+                date.getMonth() + 1 &&
+              item.tahun ===
+                date.getFullYear()
+          );
+
+        const expenseList =
+          expenseData.filter(
+            (item) =>
+              item.tanggal ===
+                date.getDate() &&
+              item.bulan ===
+                date.getMonth() + 1 &&
+              item.tahun ===
+                date.getFullYear()
+          );
+
+        const totalIncome =
+          incomeList.reduce(
+            (acc, item) =>
+              acc +
+              Number(
+                item.pendapatan
+              ),
+            0
+          );
+
+        const totalExpense =
+          expenseList.reduce(
+            (acc, item) =>
+              acc +
+              Number(
+                item.pengeluaran
+              ),
+            0
+          );
+
+        result.push({
+          date,
+
+          currentMonth:
+            date.getMonth() ===
+            month,
+
+          income:
+            totalIncome,
+
+          expense:
+            totalExpense,
+        });
+      }
+
+      return result;
+
+    }, [
+      selectedMonth,
+      incomeData,
+      expenseData,
+    ]);
+
+  const totalIncomeMonth =
+    incomeData.reduce(
+      (acc, item) =>
+        acc +
+        Number(
+          item.pendapatan
+        ),
+      0
+    );
+
+  const totalExpenseMonth =
+    expenseData.reduce(
+      (acc, item) =>
+        acc +
+        Number(
+          item.pengeluaran
+        ),
+      0
+    );
+
+  const totalBalanceMonth =
+    totalIncomeMonth -
+    totalExpenseMonth;
 
   return (
-    <main className="app-wrapper">
-      <div className="mobile-frame">
+    <>
+      <main className="app-shell">
 
-        {/* HEADER */}
-        <div className="topbar">
-          <h2>Dashboard</h2>
-          <span>{formatMonth(now)}</span>
-        </div>
+        <div className="dashboard-container">
 
-        {/* BALANCE */}
-        <section className="section balance-section">
-          <div className="balance-card">
-            <h1>
-              Rp {loadingBalance ? "..." : formatNumber(balance)}
-            </h1>
-            <p className="date">{formatFullDateTime(now)}</p>
-          </div>
+          <header className="topbar">
 
-          <div className="finance-report">
-            {loadingWeekly ? (
-              <div className="row">
-                <span className="label">Memuat data...</span>
-              </div>
-            ) : (
-              <>
-                <div className="row">
-                  <span className="label">Target</span>
-                  <span className="currency">Rp</span>
-                  <span className="value">
-                    {formatNumber(todayData.target)}
-                  </span>
-                </div>
+            <div className="topbar-left">
 
-                <div className="row">
-                  <span className="label">Pendapatan</span>
-                  <span className="currency">Rp</span>
-                  <span className="value plus">
-                    {loadingIncome
-                      ? "..."
-                      : formatNumber(todayData.income)}
-                  </span>
-                </div>
+              <h1>
+                Financial Summary
+              </h1>
 
-                <div className="row">
-                  <span className="label">Pengeluaran</span>
-                  <span className="currency">Rp</span>
-                  <span className="value minus">
-                    {loadingExpense
-                      ? "..."
-                      : formatNumber(todayData.expense)}
-                  </span>
-                </div>
+              <p>
+                Monitoring pemasukan &
+                pengeluaran bulanan
+              </p>
 
-                <div className="divider" />
-
-                <div className="row total">
-                  <span className="label">Sisa Target</span>
-                  <span className="currency">Rp</span>
-                  <span
-                    className={`value ${
-                      remaining >= 0 ? "plus" : "minus"
-                    }`}
-                  >
-                    {formatNumber(remaining)}
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-        </section>
-
-        {/* WEEKLY */}
-        <section className="section weekly-section">
-          <h3 className="month-title">
-            {formatMonth(startOfWeek)}
-          </h3>
-          <p className="week-title">Weekly Target</p>
-
-          {loadingWeekly ? (
-            <p style={{ textAlign: "center" }}>
-              Memuat data...
-            </p>
-          ) : (
-            <div className="week-strip" ref={scrollRef}>
-              {weekData.map((d, i) => (
-                <div key={i} className="week-item">
-                  <span className="day">{d.day}</span>
-                  <span className="date">
-                    {formatDate(d.date)}
-                  </span>
-
-                  <div className="amount">
-                    <span className="value">
-                      {formatNumber(d.target / 1000000)} K
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* MONTHLY */}
-          <div className="monthly-cards">
-            <div className="card">
-              <span>Target Bulan</span>
-              <h4>Rp {formatNumber(monthlyTarget)}</h4>
             </div>
 
-            <div className="card">
-              <span>Sisa Target</span>
-              <h4
-                className={
-                  monthlyRemaining >= 0 ? "plus" : "minus"
+            <div className="topbar-right">
+
+              <button
+                className="nav-btn"
+                onClick={
+                  handlePrevMonth
                 }
               >
-                Rp {formatNumber(monthlyRemaining)}
-              </h4>
-            </div>
-          </div>
-        </section>
+                ←
+              </button>
 
-      </div>
-    </main>
+              <div className="month-label">
+                {formatMonth(
+                  selectedMonth
+                )}
+              </div>
+
+              <button
+                className="nav-btn"
+                onClick={
+                  handleNextMonth
+                }
+              >
+                →
+              </button>
+
+            </div>
+
+          </header>
+
+          <section className="dashboard-content">
+
+            <DashboardSlider
+              loading={
+                loadingCalendar
+              }
+              totalIncome={
+                totalIncomeMonth
+              }
+              totalExpense={
+                totalExpenseMonth
+              }
+              totalBalance={
+                totalBalanceMonth
+              }
+              formatNumber={
+                formatNumber
+              }
+              onOpenIncome={
+                openIncomeModal
+              }
+              onOpenExpense={
+                openExpenseModal
+              }
+            />
+
+            <section className="calendar-wrapper">
+
+              <div className="calendar-header">
+
+                {DAYS.map((day) => (
+                  <div
+                    key={day}
+                    className="calendar-head-cell"
+                  >
+                    {day}
+                  </div>
+                ))}
+
+              </div>
+
+              <div
+                className={`calendar-grid ${
+                  calendarDays.length === 35
+                    ? "five-rows"
+                    : "six-rows"
+                }`}
+              >
+
+                {calendarDays.map(
+                  (
+                    item,
+                    index
+                  ) => {
+
+                    const isToday =
+                      item.date.toDateString() ===
+                        new Date().toDateString() &&
+                      item.currentMonth;
+
+                    const hasFinanceData =
+                      item.income > 0 ||
+                      item.expense > 0;
+
+                    return (
+                      <div
+                        key={index}
+                        className={`calendar-cell
+                        ${
+                          !item.currentMonth
+                            ? "outside-month"
+                            : ""
+                        }
+                        ${
+                          isToday
+                            ? "today"
+                            : ""
+                        }`}
+                      >
+
+                        <div className="cell-content">
+
+                          <div className="date-section">
+
+                            <div
+                              className={`calendar-date
+                              ${
+                                !item.currentMonth
+                                  ? "outside-date"
+                                  : ""
+                              }`}
+                            >
+                              {item.date.getDate()}
+                            </div>
+
+                          </div>
+
+                          <div className="finance-section">
+
+                            {hasFinanceData && (
+                              <>
+                                {item.income > 0 && (
+                                  <div className="finance-item income">
+
+                                    <span>
+                                      ↑
+                                    </span>
+
+                                    <strong>
+                                      Rp{" "}
+                                      {formatCompact(
+                                        item.income
+                                      )}
+                                    </strong>
+
+                                  </div>
+                                )}
+
+                                {item.expense > 0 && (
+                                  <div className="finance-item expense">
+
+                                    <span>
+                                      ↓
+                                    </span>
+
+                                    <strong>
+                                      Rp{" "}
+                                      {formatCompact(
+                                        item.expense
+                                      )}
+                                    </strong>
+
+                                  </div>
+                                )}
+
+                                <button
+                                  className="detail-link"
+                                  onClick={() =>
+                                    handleOpenDetail(
+                                      item.date
+                                    )
+                                  }
+                                >
+                                  Detail
+                                </button>
+                              </>
+                            )}
+
+                          </div>
+
+                        </div>
+
+                      </div>
+                    );
+                  }
+                )}
+
+              </div>
+
+            </section>
+
+          </section>
+
+        </div>
+
+      </main>
+
+      <InputModal
+        open={
+          inputModalType !==
+          null
+        }
+        type={
+          inputModalType ||
+          "income"
+        }
+        selectedDate={
+          selectedDetailDate
+        }
+        onSuccess={
+          handleSuccess
+        }
+        onClose={
+          closeInputModal
+        }
+      />
+
+    </>
   );
 }
