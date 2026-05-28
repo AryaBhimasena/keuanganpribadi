@@ -556,8 +556,6 @@ export default function InputModal({
   const emptyState =
     historyData.length === 0;
 
-  if (!open) return null;
-
 useEffect(() => {
 
   if (initialDate) {
@@ -577,6 +575,8 @@ useEffect(() => {
   }
 
 }, [initialDate]);
+
+  if (!open) return null;
 
   return (
     <div
