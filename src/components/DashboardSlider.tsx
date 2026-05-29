@@ -10,7 +10,9 @@ import {
   createDailyGoal,
   deleteDailyGoal,
   getDailyGoals,
+  getKewajiban,
   updateDailyGoal,
+  updateKewajiban,
 } from "@/lib/api";
 
 import "@/styles/dashboard-slider.css";
@@ -37,10 +39,39 @@ type GoalItem = {
   status?: string;
 };
 
+type KewajibanItem = {
+  rowIndex?: number;
+  id_akun: string;
+  akun: string;
+  kewajiban: number;
+  sisa_kewajiban: number;
+  tanggal_pinjam: number;
+  bulan_pinjam: number;
+  tahun_pinjam: number;
+  pembayaran: number;
+  tanggal_bayar: number;
+  bulan_bayar: number;
+  tahun_bayar: number;
+  keterangan: string;
+  status: string;
+};
+
 const INITIAL_FORM = {
   goals: "",
   target: "",
 };
+
+const INITIAL_PAYMENT_FORM = {
+  pembayaran: "",
+  tanggal_bayar: "",
+  keterangan: "",
+};
+
+const SLIDES = [
+  "Overview",
+  "Goals",
+  "Debts",
+];
 
 const getTodayString = () => {
 
@@ -83,6 +114,12 @@ export default function DashboardSlider({
     setGoals] =
     useState<GoalItem[]>([]);
 
+  const [kewajiban,
+    setKewajiban] =
+    useState<
+      KewajibanItem[]
+    >([]);
+
   const [goalModalOpen,
     setGoalModalOpen] =
     useState(false);
@@ -109,6 +146,26 @@ export default function DashboardSlider({
 
   const [deleting,
     setDeleting] =
+    useState(false);
+
+  const [paymentModalOpen,
+    setPaymentModalOpen] =
+    useState(false);
+
+  const [selectedDebt,
+    setSelectedDebt] =
+    useState<KewajibanItem | null>(
+      null
+    );
+
+  const [paymentForm,
+    setPaymentForm] =
+    useState(
+      INITIAL_PAYMENT_FORM
+    );
+
+  const [savingPayment,
+    setSavingPayment] =
     useState(false);
 
   const fetchGoals =
@@ -154,16 +211,67 @@ export default function DashboardSlider({
       }
     };
 
+const fetchKewajiban =
+  async () => {
+
+    try {
+
+      const response =
+        await getKewajiban();
+
+      console.log(
+        "KEWAJIBAN RESPONSE:",
+        response
+      );
+
+      if (
+        response.success
+      ) {
+
+        console.log(
+          "KEWAJIBAN DATA:",
+          response.data
+        );
+
+        setKewajiban(
+          response.data || []
+        );
+
+      } else {
+
+        setKewajiban([]);
+      }
+
+    } catch (
+      error
+    ) {
+
+      console.error(
+        "ERROR KEWAJIBAN:",
+        error
+      );
+
+      setKewajiban([]);
+    }
+  };
+  
   useEffect(() => {
 
     fetchGoals();
 
   }, [selectedDate]);
 
+  useEffect(() => {
+
+    fetchKewajiban();
+
+  }, []);
+
   const nextSlide = () => {
 
     setActiveSlide((prev) =>
-      prev === 1
+      prev ===
+      SLIDES.length - 1
         ? 0
         : prev + 1
     );
@@ -173,7 +281,7 @@ export default function DashboardSlider({
 
     setActiveSlide((prev) =>
       prev === 0
-        ? 1
+        ? SLIDES.length - 1
         : prev - 1
     );
   };
@@ -195,6 +303,40 @@ export default function DashboardSlider({
 
     }, [selectedDate]);
 
+  const totalKewajiban =
+    useMemo(() => {
+
+      return kewajiban.reduce(
+        (
+          acc,
+          item
+        ) =>
+          acc +
+          Number(
+            item
+              .sisa_kewajiban ||
+              0
+          ),
+        0
+      );
+
+    }, [kewajiban]);
+
+const activeDebts =
+  useMemo(() => {
+
+    return kewajiban.filter(
+      (item) =>
+        String(
+          item.status || ""
+        )
+          .trim()
+          .toLowerCase() !==
+        "lunas"
+    );
+
+  }, [kewajiban]);
+  
   const openCreateModal =
     () => {
 
@@ -450,21 +592,128 @@ export default function DashboardSlider({
           error
         );
 
-        setGoals((prev) =>
-          prev.map((goal) =>
-            goal.rowIndex ===
-            item.rowIndex
-              ? {
-                  ...goal,
-                  status:
-                    item.status,
-                }
-              : goal
-          )
+        alert(
+          "Gagal update checklist"
+        );
+      }
+    };
+
+  const openPaymentModal =
+    (
+      item: KewajibanItem
+    ) => {
+
+      setSelectedDebt(
+        item
+      );
+
+      setPaymentForm({
+        pembayaran: "",
+        tanggal_bayar:
+          getTodayString(),
+        keterangan: "",
+      });
+
+      setPaymentModalOpen(
+        true
+      );
+    };
+
+  const closePaymentModal =
+    () => {
+
+      if (
+        savingPayment
+      ) {
+        return;
+      }
+
+      setPaymentModalOpen(
+        false
+      );
+
+      setSelectedDebt(
+        null
+      );
+    };
+
+  const handlePayment =
+    async () => {
+
+      if (
+        !selectedDebt
+      ) {
+        return;
+      }
+
+      try {
+
+        setSavingPayment(
+          true
+        );
+
+        const payDate =
+          new Date(
+            `${paymentForm.tanggal_bayar}T00:00:00`
+          );
+
+        const nominal =
+          Number(
+            paymentForm.pembayaran
+          );
+
+        const remaining =
+          Math.max(
+            0,
+            Number(
+              selectedDebt.sisa_kewajiban
+            ) - nominal
+          );
+
+        await updateKewajiban(
+          selectedDebt.rowIndex!,
+          {
+            ...selectedDebt,
+            pembayaran:
+              nominal,
+            sisa_kewajiban:
+              remaining,
+            tanggal_bayar:
+              payDate.getDate(),
+            bulan_bayar:
+              payDate.getMonth() +
+              1,
+            tahun_bayar:
+              payDate.getFullYear(),
+            keterangan:
+              paymentForm.keterangan,
+            status:
+              remaining <= 0
+                ? "Lunas"
+                : "",
+          }
+        );
+
+        await fetchKewajiban();
+
+        closePaymentModal();
+
+      } catch (
+        error
+      ) {
+
+        console.error(
+          error
         );
 
         alert(
-          "Gagal update checklist"
+          "Gagal menyimpan pembayaran"
+        );
+
+      } finally {
+
+        setSavingPayment(
+          false
         );
       }
     };
@@ -483,7 +732,11 @@ export default function DashboardSlider({
           </button>
 
           <div className="slider-indicator">
-            {activeSlide + 1} / 2
+            {
+              SLIDES[
+                activeSlide
+              ]
+            }
           </div>
 
           <button
@@ -496,6 +749,8 @@ export default function DashboardSlider({
         </div>
 
         <div className="dashboard-slider-body">
+
+          {/* OVERVIEW */}
 
           <div
             className={`dashboard-slide ${
@@ -583,6 +838,8 @@ export default function DashboardSlider({
             </div>
 
           </div>
+
+          {/* GOALS */}
 
           <div
             className={`dashboard-slide ${
@@ -679,19 +936,6 @@ export default function DashboardSlider({
                               }
                             </div>
 
-                            {item.target && (
-                              <div className="goal-strip-target">
-
-                                Rp{" "}
-                                {formatNumber(
-                                  Number(
-                                    item.target
-                                  )
-                                )}
-
-                              </div>
-                            )}
-
                           </div>
 
                         </div>
@@ -730,6 +974,103 @@ export default function DashboardSlider({
 
                     Belum ada goals
                     untuk tanggal ini
+
+                  </div>
+                )}
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* DEBTS */}
+
+          <div
+            className={`dashboard-slide ${
+              activeSlide === 2
+                ? "active"
+                : ""
+            }`}
+          >
+
+            <div className="daily-goals-card">
+
+              <div className="daily-goals-header">
+
+                <h3>
+                  Total Kewajiban
+                </h3>
+
+              </div>
+
+              <div className="debt-total-card">
+
+                <span>
+                  Total Outstanding
+                </span>
+
+                <h2>
+                  Rp{" "}
+                  {formatNumber(
+                    totalKewajiban
+                  )}
+                </h2>
+
+              </div>
+
+              <div className="daily-goals-list custom-scrollbar">
+
+                {activeDebts.length >
+                0 ? (
+                  activeDebts.map(
+                    (
+                      item
+                    ) => (
+                      <div
+                        key={
+                          item.rowIndex
+                        }
+                        className="goal-strip"
+                      >
+
+                        <div className="goal-strip-content">
+
+                          <div className="goal-strip-title">
+                            {
+                              item.akun
+                            }
+                          </div>
+
+                          <div className="goal-strip-target">
+
+                            Sisa Rp{" "}
+                            {formatNumber(
+                              item.sisa_kewajiban
+                            )}
+
+                          </div>
+
+                        </div>
+
+                        <button
+                          className="debt-pay-btn"
+                          onClick={() =>
+                            openPaymentModal(
+                              item
+                            )
+                          }
+                        >
+                          Bayar
+                        </button>
+
+                      </div>
+                    )
+                  )
+                ) : (
+                  <div className="empty-goals">
+
+                    Tidak ada kewajiban aktif
 
                   </div>
                 )}
@@ -791,36 +1132,6 @@ export default function DashboardSlider({
                     })
                   )
                 }
-                placeholder="Masukkan goals..."
-              />
-
-            </div>
-
-            <div className="goal-form-group">
-
-              <label>
-                Target
-              </label>
-
-              <input
-                type="number"
-                className="goal-input"
-                value={
-                  goalForm.target
-                }
-                onChange={(e) =>
-                  setGoalForm(
-                    (
-                      prev
-                    ) => ({
-                      ...prev,
-                      target:
-                        e.target
-                          .value,
-                    })
-                  )
-                }
-                placeholder="Opsional"
               />
 
             </div>
@@ -844,51 +1155,160 @@ export default function DashboardSlider({
         </div>
       )}
 
-      {deleteTarget && (
-        <div className="goal-modal-overlay">
+      {paymentModalOpen &&
+        selectedDebt && (
+          <div className="goal-modal-overlay">
 
-          <div className="delete-confirm-modal">
+            <div className="goal-modal">
 
-            <h3>
-              Hapus Goals
-            </h3>
+              <div className="goal-modal-header">
 
-            <p>
-              Apakah yakin ingin
-              menghapus goals ini?
-            </p>
+                <h3>
+                  Pembayaran
+                </h3>
 
-            <div className="delete-confirm-actions">
+                <button
+                  className="goal-modal-close"
+                  onClick={
+                    closePaymentModal
+                  }
+                >
+                  ✕
+                </button>
+
+              </div>
+
+              <div className="payment-history-card">
+
+                <div>
+                  Total Hutang
+                </div>
+
+                <strong>
+                  Rp{" "}
+                  {formatNumber(
+                    selectedDebt.kewajiban
+                  )}
+                </strong>
+
+              </div>
+
+              <div className="payment-history-card">
+
+                <div>
+                  Sisa Hutang
+                </div>
+
+                <strong>
+                  Rp{" "}
+                  {formatNumber(
+                    selectedDebt.sisa_kewajiban
+                  )}
+                </strong>
+
+              </div>
+
+              <div className="goal-form-group">
+
+                <label>
+                  Nominal Pembayaran
+                </label>
+
+                <input
+                  type="number"
+                  className="goal-input"
+                  value={
+                    paymentForm.pembayaran
+                  }
+                  onChange={(e) =>
+                    setPaymentForm(
+                      (
+                        prev
+                      ) => ({
+                        ...prev,
+                        pembayaran:
+                          e.target
+                            .value,
+                      })
+                    )
+                  }
+                />
+
+              </div>
+
+              <div className="goal-form-group">
+
+                <label>
+                  Tanggal Bayar
+                </label>
+
+                <input
+                  type="date"
+                  className="goal-input"
+                  value={
+                    paymentForm.tanggal_bayar
+                  }
+                  onChange={(e) =>
+                    setPaymentForm(
+                      (
+                        prev
+                      ) => ({
+                        ...prev,
+                        tanggal_bayar:
+                          e.target
+                            .value,
+                      })
+                    )
+                  }
+                />
+
+              </div>
+
+              <div className="goal-form-group">
+
+                <label>
+                  Keterangan
+                </label>
+
+                <textarea
+                  className="goal-textarea"
+                  value={
+                    paymentForm.keterangan
+                  }
+                  onChange={(e) =>
+                    setPaymentForm(
+                      (
+                        prev
+                      ) => ({
+                        ...prev,
+                        keterangan:
+                          e.target
+                            .value,
+                      })
+                    )
+                  }
+                />
+
+              </div>
 
               <button
-                className="delete-cancel-btn"
+                className="goal-submit-btn"
                 onClick={
-                  closeDeleteConfirm
-                }
-              >
-                Batal
-              </button>
-
-              <button
-                className="delete-confirm-btn"
-                onClick={
-                  handleDelete
+                  handlePayment
                 }
                 disabled={
-                  deleting
+                  savingPayment
                 }
               >
-                {deleting
-                  ? "Menghapus..."
-                  : "Hapus"}
+                {savingPayment
+                  ? "Menyimpan..."
+                  : "Simpan Pembayaran"}
               </button>
 
             </div>
 
           </div>
-
-        </div>
-      )}
+        )}
     </>
   );
 }

@@ -12,8 +12,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Smart Finance",
-  description: "Personal Finance App",
+  title: "Keuanganku",
+  description: "Aplikasi Keuangan Pribadi",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

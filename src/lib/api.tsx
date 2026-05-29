@@ -30,6 +30,22 @@ export type DailyGoalPayload = {
   status?: string;
 };
 
+export type KewajibanPayload = {
+  id_akun: string;
+  akun: string;
+  kewajiban: number;
+  sisa_kewajiban: number;
+  tanggal_pinjam: number;
+  bulan_pinjam: number;
+  tahun_pinjam: number;
+  pembayaran: number;
+  tanggal_bayar: number;
+  bulan_bayar: number;
+  tahun_bayar: number;
+  keterangan: string;
+  status: string;
+};
+
 /* ====================================== */
 /* BASE FETCH */
 /* ====================================== */
@@ -100,6 +116,19 @@ export async function getMonthlyExpense(
   params.append(
     "tahun",
     tahun.toString()
+  );
+
+  return apiFetch(params);
+}
+
+export async function getKewajiban() {
+
+  const params =
+    new URLSearchParams();
+
+  params.append(
+    "action",
+    "getKewajiban"
   );
 
   return apiFetch(params);
@@ -270,6 +299,86 @@ export async function createDailyGoal(
   return apiFetch(params);
 }
 
+export async function createKewajiban(
+  payload: KewajibanPayload
+) {
+
+  const params =
+    new URLSearchParams();
+
+  params.append(
+    "action",
+    "createKewajiban"
+  );
+
+  params.append(
+    "id_akun",
+    payload.id_akun
+  );
+
+  params.append(
+    "akun",
+    payload.akun
+  );
+
+  params.append(
+    "kewajiban",
+    payload.kewajiban.toString()
+  );
+
+  params.append(
+    "sisa_kewajiban",
+    payload.sisa_kewajiban.toString()
+  );
+
+  params.append(
+    "tanggal_pinjam",
+    payload.tanggal_pinjam.toString()
+  );
+
+  params.append(
+    "bulan_pinjam",
+    payload.bulan_pinjam.toString()
+  );
+
+  params.append(
+    "tahun_pinjam",
+    payload.tahun_pinjam.toString()
+  );
+
+  params.append(
+    "pembayaran",
+    payload.pembayaran.toString()
+  );
+
+  params.append(
+    "tanggal_bayar",
+    payload.tanggal_bayar.toString()
+  );
+
+  params.append(
+    "bulan_bayar",
+    payload.bulan_bayar.toString()
+  );
+
+  params.append(
+    "tahun_bayar",
+    payload.tahun_bayar.toString()
+  );
+
+  params.append(
+    "keterangan",
+    payload.keterangan
+  );
+
+  params.append(
+    "status",
+    payload.status
+  );
+
+  return apiFetch(params);
+}
+
 /* ====================================== */
 /* UPDATE */
 /* ====================================== */
@@ -417,6 +526,92 @@ export async function updateDailyGoal(
   return apiFetch(params);
 }
 
+export async function updateKewajiban(
+  rowIndex: number,
+  payload: KewajibanPayload
+) {
+
+  const params =
+    new URLSearchParams();
+
+  params.append(
+    "action",
+    "updateKewajiban"
+  );
+
+  params.append(
+    "rowIndex",
+    rowIndex.toString()
+  );
+
+  params.append(
+    "id_akun",
+    payload.id_akun
+  );
+
+  params.append(
+    "akun",
+    payload.akun
+  );
+
+  params.append(
+    "kewajiban",
+    payload.kewajiban.toString()
+  );
+
+  params.append(
+    "sisa_kewajiban",
+    payload.sisa_kewajiban.toString()
+  );
+
+  params.append(
+    "tanggal_pinjam",
+    payload.tanggal_pinjam.toString()
+  );
+
+  params.append(
+    "bulan_pinjam",
+    payload.bulan_pinjam.toString()
+  );
+
+  params.append(
+    "tahun_pinjam",
+    payload.tahun_pinjam.toString()
+  );
+
+  params.append(
+    "pembayaran",
+    payload.pembayaran.toString()
+  );
+
+  params.append(
+    "tanggal_bayar",
+    payload.tanggal_bayar.toString()
+  );
+
+  params.append(
+    "bulan_bayar",
+    payload.bulan_bayar.toString()
+  );
+
+  params.append(
+    "tahun_bayar",
+    payload.tahun_bayar.toString()
+  );
+
+  params.append(
+    "keterangan",
+    payload.keterangan
+  );
+
+  params.append(
+    "status",
+    payload.status
+  );
+
+  return apiFetch(params);
+}
+
 /* ====================================== */
 /* DELETE */
 /* ====================================== */
@@ -471,6 +666,26 @@ export async function deleteDailyGoal(
   params.append(
     "action",
     "deleteDailyGoal"
+  );
+
+  params.append(
+    "rowIndex",
+    rowIndex.toString()
+  );
+
+  return apiFetch(params);
+}
+
+export async function deleteKewajiban(
+  rowIndex: number
+) {
+
+  const params =
+    new URLSearchParams();
+
+  params.append(
+    "action",
+    "deleteKewajiban"
   );
 
   params.append(
