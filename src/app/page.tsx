@@ -681,6 +681,7 @@ const handleOpenDetail =
           inputModalType ||
           "income"
         }
+		initialDate={detailDate}
         onSuccess={
           handleSuccess
         }
