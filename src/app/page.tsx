@@ -12,6 +12,7 @@ import {
 } from "@/lib/api";
 
 import InputModal from "@/components/InputModal";
+import DetailModal from "@/components/DetailModal";
 
 import DashboardSlider from "@/components/DashboardSlider";
 
@@ -81,11 +82,45 @@ export default function HomePage() {
       null
     );
 
-  const [selectedDetailDate,
-    setSelectedDetailDate] =
-    useState<Date | null>(
-      null
-    );
+const [
+  detailOpen,
+  setDetailOpen,
+] = useState(false);
+
+const [
+  detailDate,
+  setDetailDate,
+] = useState<Date | null>(null);
+
+const getIncomeByDate = (
+  date: Date
+) => {
+
+  return incomeData.filter(
+    (item) =>
+      item.tanggal ===
+        date.getDate() &&
+      item.bulan ===
+        date.getMonth() + 1 &&
+      item.tahun ===
+        date.getFullYear()
+  );
+};
+
+const getExpenseByDate = (
+  date: Date
+) => {
+
+  return expenseData.filter(
+    (item) =>
+      item.tanggal ===
+        date.getDate() &&
+      item.bulan ===
+        date.getMonth() + 1 &&
+      item.tahun ===
+        date.getFullYear()
+  );
+};
 
   useEffect(() => {
 
@@ -230,10 +265,6 @@ export default function HomePage() {
   const openIncomeModal =
     () => {
 
-      setSelectedDetailDate(
-        null
-      );
-
       setInputModalType(
         "income"
       );
@@ -242,26 +273,18 @@ export default function HomePage() {
   const openExpenseModal =
     () => {
 
-      setSelectedDetailDate(
-        null
-      );
-
       setInputModalType(
         "expense"
       );
     };
 
-  const handleOpenDetail =
-    (date: Date) => {
+const handleOpenDetail =
+  (date: Date) => {
 
-      setSelectedDetailDate(
-        date
-      );
+    setDetailDate(date);
 
-      setInputModalType(
-        "income"
-      );
-    };
+    setDetailOpen(true);
+  };
 
   const closeInputModal =
     () => {
@@ -270,9 +293,6 @@ export default function HomePage() {
         null
       );
 
-      setSelectedDetailDate(
-        null
-      );
     };
 
   const handleSuccess =
@@ -661,9 +681,6 @@ export default function HomePage() {
           inputModalType ||
           "income"
         }
-        initialDate={
-          selectedDetailDate
-        }
         onSuccess={
           handleSuccess
         }
@@ -671,6 +688,32 @@ export default function HomePage() {
           closeInputModal
         }
       />
+
+<DetailModal
+  open={detailOpen}
+  date={detailDate}
+  incomeList={
+    detailDate
+      ? getIncomeByDate(
+          detailDate
+        )
+      : []
+  }
+  expenseList={
+    detailDate
+      ? getExpenseByDate(
+          detailDate
+        )
+      : []
+  }
+  onClose={() => {
+
+    setDetailOpen(false);
+
+    setDetailDate(null);
+
+  }}
+/>
 
     </>
   );

@@ -24,7 +24,8 @@
 .input-modal-container {
   width: 100%;
   max-width: 1100px;
-  min-height: 680px;
+
+  height: min(680px, 90vh);
 
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -49,6 +50,8 @@
   flex-direction: column;
 
   border-right: 1px solid #e5e7eb;
+  
+  min-height: 0;
 }
 
 .input-modal-header {
@@ -276,6 +279,11 @@
 
   display: flex;
   flex-direction: column;
+  
+  height: 100%;
+  min-height: 0;
+  
+  overflow: hidden;
 }
 
 .history-header {
@@ -383,11 +391,26 @@
 /* ====================================== */
 
 .history-list {
+  flex: 1 1 auto;
+
   display: flex;
   flex-direction: column;
+
   gap: 14px;
 
+  min-height: 0;
+
   overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-right: 6px;
+
+  scroll-behavior: smooth;
+
+  scrollbar-width: thin;
+  scrollbar-color:
+    #cbd5e1
+    transparent;
 }
 
 .history-card {
@@ -495,6 +518,104 @@
 
   background: #ffffff;
   border: 1px dashed #cbd5e1;
+}
+
+/* ====================================== */
+/* HISTORY LOADING */
+/* ====================================== */
+
+.history-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  min-height: 220px;
+
+  border-radius: 18px;
+
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+
+  text-align: center;
+}
+
+.history-loading span {
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #64748b;
+}
+
+.history-loading-spinner {
+  width: 34px;
+  height: 34px;
+
+  border-radius: 999px;
+
+  border: 3px solid
+    #e2e8f0;
+
+  border-top-color:
+    #2563eb;
+
+  animation:
+    historySpin
+    0.8s linear infinite;
+}
+
+@keyframes historySpin {
+
+  from {
+    transform:
+      rotate(0deg);
+  }
+
+  to {
+    transform:
+      rotate(360deg);
+  }
+}
+
+/* ====================================== */
+/* HISTORY SCROLLBAR */
+/* ====================================== */
+
+.history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #cbd5e1,
+      #94a3b8
+    );
+
+  border: 2px solid
+    transparent;
+
+  background-clip: padding-box;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #94a3b8,
+      #64748b
+    );
+
+  background-clip: padding-box;
 }
 
 /* ====================================== */

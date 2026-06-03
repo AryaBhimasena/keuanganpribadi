@@ -93,6 +93,11 @@ export default function InputModal({
     setLoading] =
     useState(false);
 
+const [
+  historyLoading,
+  setHistoryLoading,
+] = useState(false);
+
   const [historyData,
     setHistoryData] =
     useState<
@@ -230,166 +235,198 @@ export default function InputModal({
       );
     };
 
-  const fetchHistory =
-    async () => {
+const fetchHistory =
+  async () => {
 
-      try {
+    try {
 
-        const action =
-          isIncome
-            ? "getMonthlyIncome"
-            : "getMonthlyExpense";
+      setHistoryLoading(
+        true
+      );
 
-        const response =
-          await fetch(
-            `${BASE_URL}?action=${action}&bulan=${bulan}&tahun=${tahun}`
-          );
+      const action =
+        isIncome
+          ? "getMonthlyIncome"
+          : "getMonthlyExpense";
 
-        const result =
-          await response.json();
-
-        if (
-          !result.success
-        ) {
-
-          return;
-        }
-
-        const filteredData =
-          result.data.filter(
-            (
-              item: any
-            ) =>
-              Number(
-                item.tanggal
-              ) ===
-              Number(
-                tanggal
-              )
-          );
-
-        const mappedData =
-          filteredData.map(
-            (
-              item: any,
-              index: number
-            ) => {
-
-              return {
-                id:
-                  index + 1,
-
-                rowIndex:
-                  item.rowIndex,
-
-                description:
-                  item.keterangan ||
-                  "-",
-
-                amount:
-                  isIncome
-                    ? Number(
-                        item.pendapatan
-                      )
-                    : Number(
-                        item.pengeluaran
-                      ),
-
-                tanggal:
-                  item.tanggal,
-
-                bulan:
-                  item.bulan,
-
-                tahun:
-                  item.tahun,
-
-                date:
-                  formatDate(
-                    item.tanggal,
-                    item.bulan,
-                    item.tahun
-                  ),
-              };
-            }
-          );
-
-        setHistoryData(
-          mappedData
+      const response =
+        await fetch(
+          `${BASE_URL}?action=${action}&bulan=${bulan}&tahun=${tahun}`
         );
 
-      } catch (err) {
+      const result =
+        await response.json();
 
-        console.error(err);
+      if (
+        !result.success
+      ) {
+
+        setHistoryData(
+          []
+        );
+
+        return;
       }
-    };
 
-  useEffect(() => {
+      const filteredData =
+        result.data.filter(
+          (
+            item: any
+          ) =>
+            Number(
+              item.tanggal
+            ) ===
+            Number(
+              tanggal
+            )
+        );
 
-    if (open) {
+      const mappedData =
+        filteredData.map(
+          (
+            item: any,
+            index: number
+          ) => {
 
-      fetchHistory();
-    }
+            return {
+              id:
+                index + 1,
 
-  }, [
-    open,
-    type,
-    tanggal,
-    bulan,
-    tahun,
-  ]);
+              rowIndex:
+                item.rowIndex,
 
-  const resetForm =
-    () => {
+              description:
+                item.keterangan ||
+                "-",
 
-      syncDateFields(
-        selectedDate
+              amount:
+                isIncome
+                  ? Number(
+                      item.pendapatan
+                    )
+                  : Number(
+                      item.pengeluaran
+                    ),
+
+              tanggal:
+                item.tanggal,
+
+              bulan:
+                item.bulan,
+
+              tahun:
+                item.tahun,
+
+              date:
+                formatDate(
+                  item.tanggal,
+                  item.bulan,
+                  item.tahun
+                ),
+            };
+          }
+        );
+
+      setHistoryData(
+        mappedData
       );
 
-      setNominal("");
-      setKeterangan("");
+    } catch (err) {
 
-      setEditMode(
+      console.error(err);
+
+      setHistoryData(
+        []
+      );
+
+    } finally {
+
+      setHistoryLoading(
         false
       );
+    }
+  };
+  
+useEffect(() => {
 
-      setSelectedRowIndex(
-        null
-      );
-    };
+  if (!open) {
 
-  const handleSelectHistory =
-    (
-      item: HistoryItem
-    ) => {
+    return;
+  }
 
-      setEditMode(true);
+  fetchHistory();
 
-      setSelectedRowIndex(
-        item.rowIndex
-      );
+}, [
+  open,
+  type,
+  selectedDate,
+]);
 
-      setTanggal(
-        item.tanggal.toString()
-      );
+const resetForm =
+  () => {
 
-      setBulan(
-        item.bulan.toString()
-      );
+    syncDateFields(
+      selectedDate
+    );
 
-      setTahun(
-        item.tahun.toString()
-      );
+    setNominal("");
 
-      setNominal(
-        item.amount.toString()
-      );
+    setKeterangan("");
 
-      setKeterangan(
-        item.description
-      );
-    };
+    setEditMode(
+      false
+    );
 
+    setSelectedRowIndex(
+      null
+    );
+  };
+  
+const handleSelectHistory =
+  (
+    item: HistoryItem
+  ) => {
+
+    setEditMode(true);
+
+    setSelectedRowIndex(
+      item.rowIndex
+    );
+
+    const formattedDate =
+      new Date(
+        item.tahun,
+        item.bulan - 1,
+        item.tanggal
+      )
+        .toISOString()
+        .split("T")[0];
+
+    setSelectedDate(
+      formattedDate
+    );
+
+    setTanggal(
+      item.tanggal.toString()
+    );
+
+    setBulan(
+      item.bulan.toString()
+    );
+
+    setTahun(
+      item.tahun.toString()
+    );
+
+    setNominal(
+      item.amount.toString()
+    );
+
+    setKeterangan(
+      item.description
+    );
+  };
+  
   const handleSubmit =
     async (
       e:
@@ -478,6 +515,14 @@ export default function InputModal({
         await fetchHistory();
 		await onSuccess();
 
+setEditMode(
+  false
+);
+
+setSelectedRowIndex(
+  null
+);
+
         resetForm();
 
       } catch (err) {
@@ -541,6 +586,14 @@ export default function InputModal({
         await fetchHistory();
 		await onSuccess();
 
+setEditMode(
+  false
+);
+
+setSelectedRowIndex(
+  null
+);
+
         resetForm();
 
       } catch (err) {
@@ -558,23 +611,51 @@ export default function InputModal({
 
 useEffect(() => {
 
+  if (!open) {
+
+    return;
+  }
+
+  let formatted: string;
+
   if (initialDate) {
 
-    const formatted =
+    formatted =
       initialDate
         .toISOString()
         .split("T")[0];
 
-    setSelectedDate(
-      formatted
-    );
+  } else {
 
-    syncDateFields(
-      formatted
-    );
+    formatted =
+      new Date()
+        .toISOString()
+        .split("T")[0];
   }
 
-}, [initialDate]);
+  setSelectedDate(
+    formatted
+  );
+
+  syncDateFields(
+    formatted
+  );
+
+  setNominal("");
+  setKeterangan("");
+
+  setEditMode(
+    false
+  );
+
+  setSelectedRowIndex(
+    null
+  );
+
+}, [
+  open,
+  initialDate,
+]);
 
   if (!open) return null;
 
@@ -863,16 +944,40 @@ useEffect(() => {
 
           </div>
 
-          <div className="history-list">
+		<div className="history-list">
 
-            {emptyState && (
-              <div className="history-empty">
-                Belum ada transaksi
-              </div>
-            )}
+		  {historyLoading && (
+			<div className="history-loading">
 
-            {historyData.map(
-              (item) => (
+			  <div className="history-loading-spinner" />
+
+			  <span>
+				Memuat transaksi tanggal{" "}
+				{new Date(
+				  selectedDate
+				).toLocaleDateString(
+				  "id-ID",
+				  {
+					day: "numeric",
+					month: "long",
+					year: "numeric",
+				  }
+				)}
+			  </span>
+
+			</div>
+		  )}
+
+		  {!historyLoading &&
+			emptyState && (
+			  <div className="history-empty">
+				Belum ada transaksi
+			  </div>
+			)}
+
+		  {!historyLoading &&
+			historyData.map(
+			  (item) => (
                 <button
                   key={item.id}
                   type="button"

@@ -934,8 +934,16 @@ const activeDebts =
                               {
                                 item.goals
                               }
+							  
                             </div>
 
+<div className="goal-strip-target">
+  Rp{" "}
+  {Number(
+    item.target || 0
+  ).toLocaleString("id-ID")}
+</div>
+	
                           </div>
 
                         </div>
