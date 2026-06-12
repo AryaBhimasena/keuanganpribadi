@@ -1,29 +1,27 @@
 "use client";
 
+import Link from "next/link";
 import {
   useEffect,
-  useMemo,
   useState,
 } from "react";
+
+import {
+  CalendarDays,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 
 import {
   getMonthlyIncome,
   getMonthlyExpense,
 } from "@/lib/api";
 
-import InputModal from "@/components/InputModal";
-import DetailModal from "@/components/DetailModal";
+import "@/styles/homepage.css";
 
-import DashboardSlider from "@/components/DashboardSlider";
-
-import "@/styles/home.css";
-
-type CalendarDay = {
-  date: Date;
-  currentMonth: boolean;
-  income: number;
-  expense: number;
-};
+/* =============================== */
+/* TYPES */
+/* =============================== */
 
 type IncomeItem = {
   rowIndex?: number;
@@ -43,26 +41,13 @@ type ExpenseItem = {
   keterangan: string;
 };
 
-type InputModalType =
-  | "income"
-  | "expense"
-  | null;
-
-const DAYS = [
-  "Sen",
-  "Sel",
-  "Rab",
-  "Kam",
-  "Jum",
-  "Sab",
-  "Min",
-];
-
 export default function HomePage() {
+  const [showTarget, setShowTarget] =
+    useState(false);
 
-  const [selectedMonth,
-    setSelectedMonth] =
-    useState(new Date());
+  const [loading,
+    setLoading] =
+    useState(true);
 
   const [incomeData,
     setIncomeData] =
@@ -72,74 +57,35 @@ export default function HomePage() {
     setExpenseData] =
     useState<ExpenseItem[]>([]);
 
-  const [loadingCalendar,
-    setLoadingCalendar] =
-    useState(true);
+  /* =============================== */
+  /* STATIC TARGET */
+  /* =============================== */
 
-  const [inputModalType,
-    setInputModalType] =
-    useState<InputModalType>(
-      null
-    );
+  const totalTarget =
+    10000000;
 
-const [
-  detailOpen,
-  setDetailOpen,
-] = useState(false);
-
-const [
-  detailDate,
-  setDetailDate,
-] = useState<Date | null>(null);
-
-const getIncomeByDate = (
-  date: Date
-) => {
-
-  return incomeData.filter(
-    (item) =>
-      item.tanggal ===
-        date.getDate() &&
-      item.bulan ===
-        date.getMonth() + 1 &&
-      item.tahun ===
-        date.getFullYear()
-  );
-};
-
-const getExpenseByDate = (
-  date: Date
-) => {
-
-  return expenseData.filter(
-    (item) =>
-      item.tanggal ===
-        date.getDate() &&
-      item.bulan ===
-        date.getMonth() + 1 &&
-      item.tahun ===
-        date.getFullYear()
-  );
-};
+  /* =============================== */
+  /* FETCH REAL DATA */
+  /* =============================== */
 
   useEffect(() => {
+    fetchHomepageData();
+  }, []);
 
-    fetchMonthlyCalendar();
-
-  }, [selectedMonth]);
-
-  const fetchMonthlyCalendar =
+  const fetchHomepageData =
     async () => {
 
       try {
+        setLoading(true);
 
-        setLoadingCalendar(true);
+        const now =
+          new Date();
 
         const bulan =
-          selectedMonth.getMonth() + 1;
+          now.getMonth() + 1;
 
         const tahun =
-          selectedMonth.getFullYear();
+          now.getFullYear();
 
         const [
           incomeResponse,
@@ -160,28 +106,22 @@ const getExpenseByDate = (
         if (
           incomeResponse.success
         ) {
-
           setIncomeData(
             incomeResponse.data ||
               []
           );
-
         } else {
-
           setIncomeData([]);
         }
 
         if (
           expenseResponse.success
         ) {
-
           setExpenseData(
             expenseResponse.data ||
               []
           );
-
         } else {
-
           setExpenseData([]);
         }
 
@@ -194,243 +134,16 @@ const getExpenseByDate = (
 
       } finally {
 
-        setLoadingCalendar(false);
+        setLoading(false);
 
       }
     };
 
-  const formatNumber = (
-    num: number
-  ) =>
-    num.toLocaleString("id-ID");
+  /* =============================== */
+  /* CALCULATIONS */
+  /* =============================== */
 
-  const formatCompact = (
-    num: number
-  ) =>
-    new Intl.NumberFormat(
-      "id-ID",
-      {
-        notation: "compact",
-        maximumFractionDigits: 1,
-      }
-    ).format(num);
-
-  const formatMonth = (
-    date: Date
-  ) =>
-    date.toLocaleDateString(
-      "id-ID",
-      {
-        month: "long",
-        year: "numeric",
-      }
-    );
-
-  const handlePrevMonth =
-    () => {
-
-      setSelectedMonth(
-        (prev) => {
-
-          const next =
-            new Date(prev);
-
-          next.setMonth(
-            prev.getMonth() - 1
-          );
-
-          return next;
-        }
-      );
-    };
-
-  const handleNextMonth =
-    () => {
-
-      setSelectedMonth(
-        (prev) => {
-
-          const next =
-            new Date(prev);
-
-          next.setMonth(
-            prev.getMonth() + 1
-          );
-
-          return next;
-        }
-      );
-    };
-
-  const openIncomeModal =
-    () => {
-
-      setInputModalType(
-        "income"
-      );
-    };
-
-  const openExpenseModal =
-    () => {
-
-      setInputModalType(
-        "expense"
-      );
-    };
-
-const handleOpenDetail =
-  (date: Date) => {
-
-    setDetailDate(date);
-
-    setDetailOpen(true);
-  };
-
-  const closeInputModal =
-    () => {
-
-      setInputModalType(
-        null
-      );
-
-    };
-
-  const handleSuccess =
-    async () => {
-
-      await fetchMonthlyCalendar();
-    };
-
-  const calendarDays =
-    useMemo(() => {
-
-      const year =
-        selectedMonth.getFullYear();
-
-      const month =
-        selectedMonth.getMonth();
-
-      const firstDay =
-        new Date(
-          year,
-          month,
-          1
-        );
-
-      let startDay =
-        firstDay.getDay();
-
-      if (startDay === 0) {
-        startDay = 7;
-      }
-
-      const daysInMonth =
-        new Date(
-          year,
-          month + 1,
-          0
-        ).getDate();
-
-      const totalCells =
-        startDay - 1 +
-        daysInMonth;
-
-      const totalRows =
-        totalCells <= 35
-          ? 35
-          : 42;
-
-      const startDate =
-        new Date(firstDay);
-
-      startDate.setDate(
-        firstDay.getDate() -
-          startDay +
-          1
-      );
-
-      const result:
-        CalendarDay[] = [];
-
-      for (
-        let i = 0;
-        i < totalRows;
-        i++
-      ) {
-
-        const date =
-          new Date(startDate);
-
-        date.setDate(
-          startDate.getDate() + i
-        );
-
-        const incomeList =
-          incomeData.filter(
-            (item) =>
-              item.tanggal ===
-                date.getDate() &&
-              item.bulan ===
-                date.getMonth() + 1 &&
-              item.tahun ===
-                date.getFullYear()
-          );
-
-        const expenseList =
-          expenseData.filter(
-            (item) =>
-              item.tanggal ===
-                date.getDate() &&
-              item.bulan ===
-                date.getMonth() + 1 &&
-              item.tahun ===
-                date.getFullYear()
-          );
-
-        const totalIncome =
-          incomeList.reduce(
-            (acc, item) =>
-              acc +
-              Number(
-                item.pendapatan
-              ),
-            0
-          );
-
-        const totalExpense =
-          expenseList.reduce(
-            (acc, item) =>
-              acc +
-              Number(
-                item.pengeluaran
-              ),
-            0
-          );
-
-        result.push({
-          date,
-
-          currentMonth:
-            date.getMonth() ===
-            month,
-
-          income:
-            totalIncome,
-
-          expense:
-            totalExpense,
-        });
-      }
-
-      return result;
-
-    }, [
-      selectedMonth,
-      incomeData,
-      expenseData,
-    ]);
-
-  const totalIncomeMonth =
+  const totalIncome =
     incomeData.reduce(
       (acc, item) =>
         acc +
@@ -440,7 +153,7 @@ const handleOpenDetail =
       0
     );
 
-  const totalExpenseMonth =
+  const totalExpense =
     expenseData.reduce(
       (acc, item) =>
         acc +
@@ -450,272 +163,169 @@ const handleOpenDetail =
       0
     );
 
-  const totalBalanceMonth =
-    totalIncomeMonth -
-    totalExpenseMonth;
+  const surplus =
+    totalIncome -
+    totalExpense;
+
+  const remainingTarget =
+    surplus > 0
+      ? totalTarget - surplus
+      : totalTarget;
+
+  /* =============================== */
+  /* FORMATTERS */
+  /* =============================== */
+
+  const compact = (
+    num: number
+  ) =>
+    new Intl.NumberFormat(
+      "id-ID",
+      {
+        notation:
+          "compact",
+        maximumFractionDigits:
+          1,
+      }
+    ).format(num);
+
+  const full = (
+    num: number
+  ) =>
+    num.toLocaleString(
+      "id-ID"
+    );
+
+  const today =
+    new Date().toLocaleDateString(
+      "id-ID",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }
+    );
+
+  /* =============================== */
+  /* RENDER */
+  /* =============================== */
 
   return (
-    <>
-      <main className="app-shell">
+    <main className="homepage">
 
-        <div className="dashboard-container">
+      <section className="hero-card">
 
-          <header className="topbar">
+        <span className="hero-label">
+          TOTAL TARGET
+        </span>
 
-            <div className="topbar-left">
+        <div className="hero-amount-row">
 
-              <h1>
-                Financial Summary
-              </h1>
+          <h1 className="hero-amount">
 
-              <p>
-                Monitoring pemasukan &
-                pengeluaran bulanan
-              </p>
+            {showTarget
+              ? `Rp ${full(
+                  totalTarget
+                )}`
+              : "Rp •••••••••"}
 
-            </div>
+          </h1>
 
-            <div className="topbar-right">
-
-              <button
-                className="nav-btn"
-                onClick={
-                  handlePrevMonth
-                }
-              >
-                ←
-              </button>
-
-              <div className="month-label">
-                {formatMonth(
-                  selectedMonth
-                )}
-              </div>
-
-              <button
-                className="nav-btn"
-                onClick={
-                  handleNextMonth
-                }
-              >
-                →
-              </button>
-
-            </div>
-
-          </header>
-
-          <section className="dashboard-content">
-
-            <DashboardSlider
-              loading={
-                loadingCalendar
-              }
-              totalIncome={
-                totalIncomeMonth
-              }
-              totalExpense={
-                totalExpenseMonth
-              }
-              totalBalance={
-                totalBalanceMonth
-              }
-              formatNumber={
-                formatNumber
-              }
-              onOpenIncome={
-                openIncomeModal
-              }
-              onOpenExpense={
-                openExpenseModal
-              }
-            />
-
-            <section className="calendar-wrapper">
-
-              <div className="calendar-header">
-
-                {DAYS.map((day) => (
-                  <div
-                    key={day}
-                    className="calendar-head-cell"
-                  >
-                    {day}
-                  </div>
-                ))}
-
-              </div>
-
-              <div
-                className={`calendar-grid ${
-                  calendarDays.length === 35
-                    ? "five-rows"
-                    : "six-rows"
-                }`}
-              >
-
-                {calendarDays.map(
-                  (
-                    item,
-                    index
-                  ) => {
-
-                    const isToday =
-                      item.date.toDateString() ===
-                        new Date().toDateString() &&
-                      item.currentMonth;
-
-                    const hasFinanceData =
-                      item.income > 0 ||
-                      item.expense > 0;
-
-                    return (
-                      <div
-                        key={index}
-                        className={`calendar-cell
-                        ${
-                          !item.currentMonth
-                            ? "outside-month"
-                            : ""
-                        }
-                        ${
-                          isToday
-                            ? "today"
-                            : ""
-                        }`}
-                      >
-
-                        <div className="cell-content">
-
-                          <div className="date-section">
-
-                            <div
-                              className={`calendar-date
-                              ${
-                                !item.currentMonth
-                                  ? "outside-date"
-                                  : ""
-                              }`}
-                            >
-                              {item.date.getDate()}
-                            </div>
-
-                          </div>
-
-                          <div className="finance-section">
-
-                            {hasFinanceData && (
-                              <>
-                                {item.income > 0 && (
-                                  <div className="finance-item income">
-
-                                    <span>
-                                      ↑
-                                    </span>
-
-                                    <strong>
-                                      Rp{" "}
-                                      {formatCompact(
-                                        item.income
-                                      )}
-                                    </strong>
-
-                                  </div>
-                                )}
-
-                                {item.expense > 0 && (
-                                  <div className="finance-item expense">
-
-                                    <span>
-                                      ↓
-                                    </span>
-
-                                    <strong>
-                                      Rp{" "}
-                                      {formatCompact(
-                                        item.expense
-                                      )}
-                                    </strong>
-
-                                  </div>
-                                )}
-
-                                <button
-                                  className="detail-link"
-                                  onClick={() =>
-                                    handleOpenDetail(
-                                      item.date
-                                    )
-                                  }
-                                >
-                                  Detail
-                                </button>
-                              </>
-                            )}
-
-                          </div>
-
-                        </div>
-
-                      </div>
-                    );
-                  }
-                )}
-
-              </div>
-
-            </section>
-
-          </section>
+          <button
+            className="eye-button"
+            onClick={() =>
+              setShowTarget(
+                !showTarget
+              )
+            }
+          >
+            {showTarget ? (
+              <EyeOff
+                size={22}
+              />
+            ) : (
+              <Eye
+                size={22}
+              />
+            )}
+          </button>
 
         </div>
 
-      </main>
+        <div className="hero-meta">
 
-      <InputModal
-        open={
-          inputModalType !==
-          null
-        }
-        type={
-          inputModalType ||
-          "income"
-        }
-		initialDate={detailDate}
-        onSuccess={
-          handleSuccess
-        }
-        onClose={
-          closeInputModal
-        }
-      />
+          <span>
+            Remaining :
+            Rp{" "}
+            {full(
+              remainingTarget
+            )}
+          </span>
 
-<DetailModal
-  open={detailOpen}
-  date={detailDate}
-  incomeList={
-    detailDate
-      ? getIncomeByDate(
-          detailDate
-        )
-      : []
-  }
-  expenseList={
-    detailDate
-      ? getExpenseByDate(
-          detailDate
-        )
-      : []
-  }
-  onClose={() => {
+          <small>
+            {today}
+          </small>
 
-    setDetailOpen(false);
+        </div>
 
-    setDetailDate(null);
+      </section>
 
-  }}
-/>
+      <section className="bottom-row">
 
-    </>
+        <div className="mini-card income">
+          <span>
+            Income — Rp{" "}
+            {loading
+              ? "..."
+              : compact(
+                  totalIncome
+                )}
+          </span>
+        </div>
+
+        <div className="mini-card expense">
+          <span>
+            Expense — Rp{" "}
+            {loading
+              ? "..."
+              : compact(
+                  totalExpense
+                )}
+          </span>
+        </div>
+
+        <div className="mini-card balance">
+          <span>
+
+            {surplus >= 0
+              ? "Surplus"
+              : "Defisit"}
+
+            {" — Rp "}
+
+            {loading
+              ? "..."
+              : compact(
+                  Math.abs(
+                    surplus
+                  )
+                )}
+
+          </span>
+        </div>
+
+        <Link
+          href="/agenda"
+          className="agenda-btn"
+        >
+          <CalendarDays
+            size={20}
+          />
+        </Link>
+
+      </section>
+
+    </main>
   );
 }

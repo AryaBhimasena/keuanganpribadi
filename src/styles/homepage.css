@@ -1,0 +1,292 @@
+/* =============================== */
+/* RESET */
+/* =============================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* =============================== */
+/* LAYOUT */
+/* =============================== */
+
+.homepage {
+  width: 100%;
+
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 16px;
+
+  overflow: clip;
+
+  background: linear-gradient(
+    180deg,
+    #fcfcfc 0%,
+    #f3f4f6 100%
+  );
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+/* =============================== */
+/* HERO */
+/* =============================== */
+
+.hero-card {
+  width: 100%;
+  max-width: 620px;
+
+  border: 3px solid #2e2e2e;
+
+  border-radius: 42px;
+
+  padding: 42px 38px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.85
+  );
+
+  box-shadow:
+    0 10px 24px
+    rgba(0, 0, 0, 0.025);
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  text-align: center;
+}
+
+/* =============================== */
+/* HERO TEXT */
+/* =============================== */
+
+.hero-label {
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: #909090;
+
+  margin-bottom: 18px;
+}
+
+.hero-amount-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.hero-amount {
+  font-size: 3.4rem;
+
+  font-weight: 900;
+
+  line-height: 1;
+
+  letter-spacing: -2px;
+
+  color: #1d1d1d;
+}
+
+/* =============================== */
+/* EYE BUTTON */
+/* =============================== */
+
+.eye-button {
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #666666;
+
+  transition: 0.2s ease;
+}
+
+.eye-button:hover {
+  transform: scale(1.08);
+}
+
+/* =============================== */
+/* META */
+/* =============================== */
+
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+.hero-meta span {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #4d4d4d;
+}
+
+.hero-meta small {
+  font-size: 13px;
+
+  color: #989898;
+}
+
+/* =============================== */
+/* BOTTOM */
+/* =============================== */
+
+.bottom-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+/* =============================== */
+/* MINI CARD */
+/* =============================== */
+
+.mini-card {
+  min-width: 170px;
+
+  height: 46px;
+
+  padding: 0 16px;
+
+  border-radius: 16px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.88
+  );
+
+  box-shadow:
+    0 4px 10px
+    rgba(0, 0, 0, 0.015);
+}
+
+.mini-card span {
+  font-size: 13px;
+
+  font-weight: 700;
+
+  color: #2d2d2d;
+
+  white-space: nowrap;
+}
+
+/* =============================== */
+/* COLORS */
+/* =============================== */
+
+.mini-card.income {
+  border: 2px solid #2ecc71;
+}
+
+.mini-card.expense {
+  border: 2px solid #ff5f57;
+}
+
+.mini-card.balance {
+  border: 2px solid #4f8cff;
+}
+
+/* =============================== */
+/* AGENDA */
+/* =============================== */
+
+.agenda-btn {
+  width: 46px;
+  height: 46px;
+
+  border: 2px solid #2e2e2e;
+
+  border-radius: 16px;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+
+  color: #2d2d2d;
+
+  box-shadow:
+    0 4px 10px
+    rgba(0, 0, 0, 0.02);
+
+  transition: 0.2s ease;
+}
+
+.agenda-btn:hover {
+  transform: scale(1.05);
+}
+
+/* =============================== */
+/* MOBILE */
+/* =============================== */
+
+@media (max-width: 768px) {
+  .hero-card {
+    max-width: 100%;
+
+    padding: 32px 24px;
+  }
+
+  .hero-amount {
+    font-size: 2.3rem;
+  }
+
+  .bottom-row {
+    flex-wrap: wrap;
+
+    justify-content: center;
+  }
+
+  .mini-card {
+    min-width: 140px;
+  }
+}
