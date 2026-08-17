@@ -1,0 +1,1397 @@
+/* =========================================================
+   STRATEGI
+   Clean Enterprise Financial UI
+   ========================================================= */
+
+.strategi-page {
+  --primary: #dc2626;
+  --primary-hover: #b91c1c;
+
+  --text: #111827;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  --border: #e2e8f0;
+  --border-soft: #edf1f5;
+
+  --surface: #ffffff;
+  --surface-subtle: #f8fafc;
+  --page: #f6f7f9;
+
+  --success: #15803d;
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+
+  min-height: 100%;
+  padding: 24px 28px 40px;
+
+  background: var(--page);
+  color: var(--text);
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.strategi-page .container {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   Jangan dibuat seperti card besar.
+   ========================================================= */
+
+.strategi-page .hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 20px;
+  padding: 4px 2px 18px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.strategi-page .hero h1 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 22px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  letter-spacing: -0.025em;
+}
+
+.strategi-page .hero p {
+  margin: 5px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.strategi-page button {
+  font-family: inherit;
+}
+
+.strategi-page .btn-primary,
+.strategi-page .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 38px;
+
+  padding: 0 14px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.strategi-page .btn-primary {
+  border: 1px solid var(--primary);
+
+  background: var(--primary);
+  color: #fff;
+}
+
+.strategi-page .btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.strategi-page .btn-secondary {
+  border: 1px solid var(--border);
+
+  background: #fff;
+  color: var(--text-secondary);
+}
+
+.strategi-page .btn-secondary:hover {
+  border-color: #cbd5e1;
+  background: var(--surface-subtle);
+  color: var(--text);
+}
+
+
+/* =========================================================
+   KPI
+   Clean separated financial metrics
+   ========================================================= */
+
+.strategi-page .summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin-bottom: 22px;
+
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.strategi-page .summary-card {
+  min-height: 88px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin: 0;
+  padding: 16px 18px;
+
+  background: #fff;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  box-shadow: none;
+}
+
+.strategi-page .summary-card span {
+  display: block;
+
+  margin: 0 0 8px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+  line-height: 1.3;
+
+  font-weight: 700;
+
+  letter-spacing: 0.045em;
+
+  text-transform: uppercase;
+}
+
+.strategi-page .summary-card strong {
+  display: block;
+
+  color: #0f172a;
+
+  font-size: 18px;
+  line-height: 1.25;
+
+  font-weight: 700;
+
+  letter-spacing: -0.02em;
+
+  white-space: nowrap;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   KPI VARIATION
+   ========================================================= */
+
+.strategi-page .summary-card:nth-child(3) strong {
+  color: var(--success);
+}
+
+.strategi-page .summary-card:nth-child(4) strong {
+  color: #334155;
+}
+
+/* =========================================================
+   MAIN CARD
+   Hanya area utama yang menjadi container.
+   ========================================================= */
+
+.strategi-page .card {
+  margin-bottom: 18px;
+  padding: 20px;
+
+  background: #fff;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.strategi-page .section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.strategi-page .section-header h2,
+.strategi-page .card > h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 15px;
+  line-height: 1.4;
+
+  font-weight: 700;
+
+  letter-spacing: -0.01em;
+}
+
+.strategi-page .section-header p {
+  margin: 4px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.strategi-page .table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border: 1px solid var(--border);
+  border-radius: 7px;
+
+  background: #fff;
+}
+
+.strategi-page table {
+  width: 100%;
+  min-width: 1120px;
+
+  border-collapse: collapse;
+
+  table-layout: fixed;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   COLUMN WIDTH
+   ========================================================= */
+
+/*
+   Ini penting.
+   Jangan biarkan browser menentukan lebar berdasarkan isi.
+*/
+
+.strategi-page th:nth-child(1),
+.strategi-page td:nth-child(1) {
+  width: 150px;
+}
+
+.strategi-page th:nth-child(2),
+.strategi-page td:nth-child(2) {
+  width: 125px;
+}
+
+.strategi-page th:nth-child(3),
+.strategi-page td:nth-child(3),
+.strategi-page th:nth-child(4),
+.strategi-page td:nth-child(4),
+.strategi-page th:nth-child(5),
+.strategi-page td:nth-child(5) {
+  width: 125px;
+}
+
+.strategi-page th:nth-child(6),
+.strategi-page td:nth-child(6) {
+  width: 125px;
+}
+
+.strategi-page th:nth-child(7),
+.strategi-page td:nth-child(7) {
+  width: 220px;
+}
+
+.strategi-page th:nth-child(8),
+.strategi-page td:nth-child(8) {
+  width: 135px;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.strategi-page thead th {
+  height: 42px;
+
+  padding: 0 12px;
+
+  background: var(--surface-subtle);
+
+  border-bottom: 1px solid var(--border);
+
+  color: #64748b;
+
+  font-size: 10px;
+  line-height: 1;
+
+  font-weight: 700;
+
+  letter-spacing: 0.035em;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+
+  text-align: left;
+}
+
+.strategi-page thead th:first-child {
+  padding-left: 16px;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.strategi-page tbody td {
+  height: 62px;
+
+  padding: 8px 12px;
+
+  border-bottom: 1px solid var(--border-soft);
+
+  background: #fff;
+
+  vertical-align: middle;
+}
+
+.strategi-page tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.strategi-page tbody tr:not(.future-row):hover td {
+  background: #fafbfc;
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.strategi-page .date-cell {
+  padding-left: 16px !important;
+}
+
+.strategi-page .date-cell strong {
+  color: #0f172a;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   MONEY
+   ========================================================= */
+
+.strategi-page .money-cell {
+  color: #334155;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  font-variant-numeric: tabular-nums;
+}
+
+.strategi-page .profit-total {
+  color: var(--success);
+
+  font-weight: 700;
+}
+
+.strategi-page .modal-end {
+  color: #0f172a;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   PERIOD CELL
+   ========================================================= */
+
+/*
+   INI PERUBAHAN PALING PENTING.
+
+   Jangan:
+   [ Rp 10.000                         □ ]
+
+   Tetapi:
+   [ Rp 10.000 ] [ □ ]
+
+   Nilai dan checkbox mempunyai area yang jelas.
+*/
+
+.strategi-page .period-cell {
+  padding: 7px 8px;
+
+  background: transparent;
+
+  border: 0;
+  border-radius: 0;
+}
+
+.strategi-page .period-cell.is-locked {
+  background: transparent;
+  border: 0;
+}
+
+.strategi-page .period-inline {
+  display: grid;
+
+  grid-template-columns: 1fr 28px;
+
+  align-items: center;
+
+  width: 100%;
+
+  min-height: 34px;
+}
+
+.strategi-page .period-inline strong {
+  display: block;
+
+  min-width: 0;
+
+  color: #0f172a;
+
+  font-size: 12px;
+  line-height: 1.3;
+
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   CHECKBOX AREA
+   ========================================================= */
+
+.strategi-page .lock-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 34px;
+
+  margin: 0;
+
+  border-left: 1px solid var(--border-soft);
+
+  cursor: pointer;
+
+  user-select: none;
+}
+
+.strategi-page .lock-checkbox span {
+  display: none;
+}
+
+.strategi-page .lock-checkbox input {
+  appearance: none;
+  -webkit-appearance: none;
+
+  position: relative;
+
+  width: 15px;
+  height: 15px;
+
+  margin: 0;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+
+  background: #fff;
+
+  cursor: pointer;
+}
+
+.strategi-page .lock-checkbox input:hover {
+  border-color: #94a3b8;
+}
+
+.strategi-page .lock-checkbox input:checked {
+  border-color: var(--success);
+  background: var(--success);
+}
+
+.strategi-page .lock-checkbox input:checked::after {
+  content: "";
+
+  position: absolute;
+
+  width: 4px;
+  height: 8px;
+
+  left: 4px;
+  top: 1px;
+
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg);
+}
+
+
+/* =========================================================
+   WITHDRAWAL
+   ========================================================= */
+
+.strategi-page .withdrawal-cell {
+  padding-right: 14px;
+}
+
+.strategi-page .withdrawal-inline {
+  display: grid;
+
+  grid-template-columns: 1fr 28px;
+
+  align-items: center;
+
+  width: 100%;
+  min-height: 34px;
+
+  padding: 0;
+
+  border: 1px solid #d7dee7;
+  border-radius: 6px;
+
+  background: #fff;
+}
+
+.strategi-page .withdrawal-inline:focus-within {
+  border-color: #94a3b8;
+
+  box-shadow: none;
+}
+
+.strategi-page .withdrawal-input {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  gap: 5px;
+
+  padding-left: 9px;
+}
+
+.strategi-page .withdrawal-input > span {
+  flex-shrink: 0;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.strategi-page .withdrawal-input input {
+  width: 100%;
+  min-width: 0;
+
+  height: 32px;
+
+  padding: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #0f172a;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* checkbox penarikan */
+
+.strategi-page .withdrawal-inline > .lock-checkbox {
+  height: 34px;
+
+  border-left: 1px solid var(--border-soft);
+}
+
+
+/* =========================================================
+   FUTURE ROW
+   ========================================================= */
+
+.strategi-page .future-row td {
+  background: #fafbfc;
+
+  color: var(--text-light);
+}
+
+.strategi-page .future-row .date-cell strong {
+  color: #94a3b8;
+}
+
+.strategi-page .future-row:hover td {
+  background: #fafbfc;
+}
+
+.strategi-page .period-cell.is-future {
+  background: transparent;
+}
+
+.strategi-page .future-value {
+  color: #cbd5e1;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   RULES
+   ========================================================= */
+
+.strategi-page .rules-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.strategi-page .rule-box {
+  padding: 15px;
+
+  background: var(--surface-subtle);
+
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.strategi-page .rule-box::before {
+  display: none;
+}
+
+.strategi-page .rule-box h3 {
+  margin: 0 0 9px;
+
+  color: #0f172a;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.strategi-page .rule-box ul {
+  margin: 0;
+  padding-left: 16px;
+
+  color: var(--text-secondary);
+}
+
+.strategi-page .rule-box li {
+  margin-bottom: 5px;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.strategi-page .rule-box li:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   MODAL OVERLAY
+   ========================================================= */
+
+.strategi-page .modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(15, 23, 42, 0.42);
+}
+
+
+/* =========================================================
+   CONFIG MODAL
+   ========================================================= */
+
+.strategi-page .config-modal {
+  width: 100%;
+  max-width: 440px;
+
+  max-height: calc(100vh - 48px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  border: 1px solid #dbe2ea;
+  border-radius: 9px;
+
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.16);
+}
+
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.strategi-page .modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 22px 17px;
+
+  background: #fff;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.strategi-page .modal-header h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 16px;
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  letter-spacing: -0.015em;
+}
+
+.strategi-page .modal-header p {
+  max-width: 330px;
+
+  margin: 5px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   MODAL CLOSE
+   ========================================================= */
+
+.strategi-page .modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  margin-top: -3px;
+
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: #64748b;
+
+  font-size: 19px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.strategi-page .modal-close:hover {
+  background: #f8fafc;
+  border-color: var(--border);
+
+  color: #0f172a;
+}
+
+
+/* =========================================================
+   MODAL BODY
+   ========================================================= */
+
+.strategi-page .modal-body {
+  display: flex;
+  flex-direction: column;
+
+  gap: 19px;
+
+  padding: 22px;
+
+  overflow-y: auto;
+
+  background: #fff;
+}
+
+
+/* =========================================================
+   FORM FIELD
+   ========================================================= */
+
+.strategi-page .field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  margin: 0;
+}
+
+.strategi-page .field > label {
+  color: #334155;
+
+  font-size: 11px;
+  line-height: 1.3;
+
+  font-weight: 700;
+}
+
+.strategi-page .field > small {
+  margin: 1px 0 0;
+
+  color: #64748b;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   INPUT BASE
+   ========================================================= */
+
+.strategi-page .input-prefix,
+.strategi-page .field > input[type="date"] {
+  height: 40px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  background: #fff;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.strategi-page .input-prefix {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  overflow: hidden;
+}
+
+.strategi-page .input-prefix:focus-within,
+.strategi-page .field > input[type="date"]:focus {
+  border-color: #94a3b8;
+
+  box-shadow:
+    0 0 0 2px rgba(148, 163, 184, 0.12);
+}
+
+
+/* =========================================================
+   PREFIX
+   ========================================================= */
+
+.strategi-page .input-prefix > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  align-self: stretch;
+
+  min-width: 42px;
+
+  padding: 0 10px;
+
+  background: #f8fafc;
+
+  border-right: 1px solid var(--border);
+
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.strategi-page .input-prefix input {
+  flex: 1;
+
+  width: 100%;
+  min-width: 0;
+
+  height: 38px;
+
+  box-sizing: border-box;
+
+  padding: 0 11px;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #0f172a;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   DATE INPUT
+   ========================================================= */
+
+.strategi-page .field > input[type="date"] {
+  width: 100%;
+
+  padding: 0 11px;
+
+  outline: none;
+
+  color: #0f172a;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+   ========================================================= */
+
+.strategi-page .modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 9px;
+
+  padding: 14px 22px;
+
+  background: #fafbfc;
+
+  border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   MODAL BUTTON
+   ========================================================= */
+
+.strategi-page .modal-footer .btn-primary,
+.strategi-page .modal-footer .btn-secondary {
+  min-width: 110px;
+
+  height: 37px;
+
+  padding: 0 14px;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   MODAL SCROLLBAR
+   ========================================================= */
+
+.strategi-page .modal-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.strategi-page .modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.strategi-page .modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.strategi-page .field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.strategi-page .field > label {
+  color: #334155;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.strategi-page .field > small {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.strategi-page .input-prefix {
+  display: flex;
+  align-items: center;
+
+  height: 38px;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.strategi-page .input-prefix:focus-within {
+  border-color: #94a3b8;
+
+  box-shadow: none;
+}
+
+.strategi-page .input-prefix > span {
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+
+  padding: 0 10px;
+
+  background: #f8fafc;
+
+  border-right: 1px solid var(--border);
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 650;
+}
+
+.strategi-page .input-prefix input {
+  flex: 1;
+
+  width: 100%;
+  min-width: 0;
+
+  height: 36px;
+
+  padding: 0 10px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #0f172a;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* Date */
+
+.strategi-page .field > input[type="date"] {
+  width: 100%;
+
+  height: 38px;
+
+  padding: 0 10px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  outline: none;
+
+  background: #fff;
+
+  color: #0f172a;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.strategi-page .field > input[type="date"]:focus {
+  border-color: #94a3b8;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+   ========================================================= */
+
+.strategi-page .modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  padding: 13px 20px;
+
+  border-top: 1px solid var(--border);
+
+  background: #fff;
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.strategi-page button:focus-visible,
+.strategi-page input:focus-visible {
+  outline: 2px solid rgba(220, 38, 38, 0.35);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   NUMBER INPUT
+   ========================================================= */
+
+.strategi-page input[type="number"]::-webkit-inner-spin-button,
+.strategi-page input[type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.strategi-page input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.strategi-page .table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.strategi-page .table-wrapper::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+.strategi-page .table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .strategi-page {
+    padding: 20px;
+  }
+
+  .strategi-page .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .strategi-page .summary-card:nth-child(2) {
+    border-right: none;
+  }
+
+  .strategi-page .summary-card:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .strategi-page .rules-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .strategi-page {
+    padding: 16px 12px 30px;
+  }
+
+  .strategi-page .hero {
+    align-items: stretch;
+    flex-direction: column;
+
+    padding-bottom: 16px;
+  }
+
+  .strategi-page .hero h1 {
+    font-size: 20px;
+  }
+
+  .strategi-page .hero .btn-primary {
+    width: 100%;
+  }
+
+  .strategi-page .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .strategi-page .summary-card {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .strategi-page .summary-card:last-child {
+    border-bottom: none;
+  }
+
+  .strategi-page .card {
+    padding: 15px;
+  }
+
+  .strategi-page .modal-overlay {
+    align-items: flex-end;
+
+    padding: 8px;
+  }
+
+  .strategi-page .config-modal {
+    max-height: calc(100vh - 16px);
+
+    border-radius: 8px;
+  }
+
+  .strategi-page .modal-header,
+  .strategi-page .modal-body {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
+  .strategi-page .modal-footer {
+    padding: 12px 17px;
+  }
+
+  .strategi-page .modal-footer button {
+    flex: 1;
+  }
+}
