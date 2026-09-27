@@ -10,7 +10,7 @@
 }
 
 .deret-container {
-  width: min(1040px, 100%);
+  width: min(1280px, 100%);
   margin: 0 auto;
 }
 
@@ -76,12 +76,24 @@
 }
 
 /* =========================================================
+   WORKSPACE
+========================================================= */
+
+.deret-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 225px;
+  gap: 9px;
+  align-items: start;
+}
+
+/* =========================================================
    COMMON CARD
 ========================================================= */
 
 .deret-card,
 .deret-matrix-card,
-.deret-result-card {
+.deret-result-card,
+.deret-market-card {
   border: 1px solid #dde2e7;
   border-radius: 9px;
   background: #fff;
@@ -107,20 +119,58 @@
 }
 
 /* =========================================================
-   TOP GRID
+   MAIN GRID
 ========================================================= */
+
+/*
+   Struktur desktop:
+
+   ┌──────────────────────────────────────────────┐
+   │                MAIN GRID                     │
+   │                                              │
+   │  ┌──────────────┐  ┌─────────────────────┐  │
+   │  │ Balance      │  │                     │  │
+   │  │              │  │ Matrix 00–99        │  │
+   │  │ Status       │  │                     │  │
+   │  └──────────────┘  └─────────────────────┘  │
+   │                                              │
+   │  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐  │
+   │  │ Invest │ │ Invest │ │ Invest │ │ Invest │  │
+   │  └───────┘ └───────┘ └───────┘ └───────┘  │
+   │                                              │
+   │  ┌────────────────────────────────────────┐  │
+   │  │ Total Investment                       │  │
+   │  └────────────────────────────────────────┘  │
+   │                                              │
+   │  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐  │
+   │  │ Result │ │ Result │ │ Result │ │ Result │  │
+   │  └───────┘ └───────┘ └───────┘ └───────┘  │
+   └──────────────────────────────────────────────┘
+
+
+   ┌──────────────┐
+   │ Market       │
+   ├──────────────┤
+   │ 10 Result    │
+   └──────────────┘
+*/
 
 .deret-main-grid {
   display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
+  grid-template-columns: 250px minmax(0, 1fr);
   gap: 9px;
   align-items: start;
+  min-width: 0;
 }
 
-.deret-left,
-.deret-right {
+/* =========================================================
+   LEFT COLUMN
+========================================================= */
+
+.deret-left {
   display: grid;
   gap: 9px;
+  min-width: 0;
 }
 
 /* =========================================================
@@ -244,6 +294,7 @@
 ========================================================= */
 
 .deret-matrix-card {
+  min-width: 0;
   padding: 11px;
 }
 
@@ -347,14 +398,701 @@
 }
 
 /* =========================================================
+   RIGHT GRID
+========================================================= */
+
+.deret-market-panel {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 9px;
+  min-width: 0;
+}
+
+/* =========================================================
+   RIGHT GRID — MARKET
+========================================================= */
+
+.deret-market-panel {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 9px;
+  min-width: 0;
+}
+
+
+/* =========================================================
+   MARKET CARD
+========================================================= */
+
+.deret-market-card {
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+
+/* =========================================================
+   MARKET HEADING
+========================================================= */
+
+.deret-market-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 12px 12px 11px;
+
+  border-bottom: 1px solid #e8ebee;
+  background: #fff;
+}
+
+.deret-market-heading > div {
+  min-width: 0;
+}
+
+.deret-market-heading .deret-card-label {
+  color: #4f5b67;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .075em;
+}
+
+.deret-market-heading small {
+  max-width: 150px;
+  margin-top: 4px;
+  color: #9aa3ad;
+  font-size: 7px;
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   LIVE BADGE
+========================================================= */
+
+.deret-market-live {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  min-width: 30px;
+  height: 18px;
+  padding: 0 6px;
+
+  border: 1px solid #d8e5df;
+  border-radius: 4px;
+
+  background: #f3f7f5;
+  color: #39745d;
+
+  font-size: 6.5px;
+  font-weight: 850;
+  letter-spacing: .07em;
+}
+
+
+/* =========================================================
+   ACTIVE MARKET
+========================================================= */
+
+.deret-market-active {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin: 9px 9px 7px;
+  padding: 10px;
+
+  border: 1px solid #dce4df;
+  border-radius: 7px;
+
+  background: #f4f8f6;
+}
+
+.deret-market-active > div {
+  min-width: 0;
+}
+
+.deret-market-active > div > span {
+  display: block;
+
+  overflow: hidden;
+
+  color: #25372f;
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: -.025em;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deret-market-active > div > small {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #7d8b84;
+  font-size: 7px;
+  line-height: 1.2;
+}
+
+.deret-market-active > strong {
+  flex-shrink: 0;
+
+  color: #39745d;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: -.04em;
+}
+
+
+/* =========================================================
+   MARKET LIST
+========================================================= */
+
+.deret-market-list {
+  display: grid;
+
+  padding: 3px 5px 5px;
+
+  background: #fff;
+}
+
+
+/* =========================================================
+   MARKET ROW
+========================================================= */
+
+.deret-market-row {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  align-items: center;
+  gap: 8px;
+
+  min-height: 35px;
+  padding: 4px 7px;
+
+  border: 1px solid transparent;
+  border-radius: 5px;
+
+  background: transparent;
+
+  transition:
+    background .15s ease,
+    border-color .15s ease;
+}
+
+.deret-market-row:hover {
+  border-color: #edf0f2;
+  background: #fafbfc;
+}
+
+
+/* =========================================================
+   MARKET NAME WRAPPER
+========================================================= */
+
+.deret-market-row > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  min-width: 0;
+}
+
+.deret-market-name {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #596571;
+
+  font-size: 8.5px;
+  line-height: 1.2;
+  font-weight: 750;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTIVE BADGE
+========================================================= */
+
+.deret-market-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 2px 5px;
+
+  border: 1px solid #d8e5df;
+  border-radius: 3px;
+
+  background: #f3f7f5;
+  color: #39745d;
+
+  font-size: 6px;
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   MARKET TIME
+========================================================= */
+
+.deret-market-time {
+  flex-shrink: 0;
+
+  color: #7b858f;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 750;
+
+  letter-spacing: -.015em;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTIVE MARKET ROW
+========================================================= */
+
+.deret-market-row.is-active {
+  border-color: #d9e5df;
+  background: #f3f7f5;
+}
+
+.deret-market-row.is-active::before {
+  content: "";
+
+  position: absolute;
+
+  top: 5px;
+  bottom: 5px;
+  left: -1px;
+
+  width: 3px;
+
+  border-radius: 0 3px 3px 0;
+
+  background: #39745d;
+}
+
+.deret-market-row.is-active .deret-market-name {
+  color: #25372f;
+  font-weight: 850;
+}
+
+.deret-market-row.is-active .deret-market-time {
+  color: #39745d;
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   MARKET COUNTDOWN
+========================================================= */
+
+.deret-market-countdown {
+  margin: 7px 9px 9px;
+  padding: 10px;
+
+  border: 1px solid #e1e5e8;
+  border-radius: 7px;
+
+  background: #f8f9fa;
+}
+
+.deret-market-countdown-label {
+  display: block;
+
+  color: #8d969f;
+
+  font-size: 6.5px;
+  line-height: 1;
+  font-weight: 850;
+
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.deret-market-countdown-time {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #202a34;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 850;
+
+  letter-spacing: -.045em;
+}
+
+.deret-market-countdown-market {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #8d969f;
+
+  font-size: 7px;
+  line-height: 1.25;
+}
+
+.deret-market-countdown-market strong {
+  color: #596571;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   MARKET RESULTS CARD
+========================================================= */
+
+.deret-market-results {
+  min-width: 0;
+
+  padding: 10px;
+
+  background: #fbfcfc;
+}
+
+
+/* =========================================================
+   RESULT HEADER
+========================================================= */
+
+.deret-market-results-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.deret-market-results-header > div {
+  min-width: 0;
+}
+
+.deret-market-results-title {
+  display: block;
+
+  color: #4f5b67;
+
+  font-size: 7.5px;
+  line-height: 1.2;
+  font-weight: 850;
+
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.deret-market-results-subtitle {
+  display: block;
+
+  margin-top: 3px;
+
+  overflow: hidden;
+
+  color: #a0a8b0;
+
+  font-size: 7px;
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deret-market-results-count {
+  flex-shrink: 0;
+
+  padding: 3px 5px;
+
+  border: 1px solid #e1e5e8;
+  border-radius: 3px;
+
+  background: #f4f5f6;
+  color: #89939d;
+
+  font-size: 6.5px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   RESULT LIST
+========================================================= */
+
+.deret-market-results-list {
+  overflow: hidden;
+
+  border: 1px solid #e4e8eb;
+  border-radius: 6px;
+
+  background: #fff;
+}
+
+
+/* =========================================================
+   RESULT ROW
+========================================================= */
+
+.deret-market-result-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  align-items: center;
+  gap: 8px;
+
+  min-height: 29px;
+  padding: 0 8px;
+
+  border-bottom: 1px solid #f0f2f4;
+
+  background: #fff;
+}
+
+.deret-market-result-row:last-child {
+  border-bottom: 0;
+}
+
+.deret-market-result-row:hover {
+  background: #fafbfc;
+}
+
+
+/* =========================================================
+   RESULT DATE
+========================================================= */
+
+.deret-market-result-date {
+  color: #8b959e;
+
+  font-size: 7px;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   RESULT VALUE
+========================================================= */
+
+.deret-market-result-value {
+  color: #303a44;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 9.5px;
+  line-height: 1;
+  font-weight: 850;
+
+  letter-spacing: .025em;
+}
+
+
+/* =========================================================
+   LATEST RESULT
+========================================================= */
+
+.deret-market-result-row:first-child {
+  background: #f8faf9;
+}
+
+.deret-market-result-row:first-child
+.deret-market-result-date {
+  color: #6f7b85;
+  font-weight: 750;
+}
+
+.deret-market-result-row:first-child
+.deret-market-result-value {
+  color: #39745d;
+}
+
+
+/* =========================================================
+   EMPTY RESULT
+========================================================= */
+
+.deret-market-result-empty {
+  padding: 14px 8px;
+
+  color: #a0a8b0;
+
+  font-size: 7px;
+  line-height: 1.4;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   MARKET RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .deret-market-panel {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .deret-market-active > div > span {
+    font-size: 15px;
+  }
+
+  .deret-market-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+  }
+
+  .deret-market-row {
+    min-height: 40px;
+  }
+
+  .deret-market-row > div:first-child {
+    display: block;
+  }
+
+  .deret-market-status {
+    margin-top: 3px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 720px) {
+
+  .deret-market-list {
+    grid-template-columns: 1fr;
+  }
+
+  .deret-market-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    min-height: 35px;
+
+    border-right: 0;
+    border-bottom: 1px solid #f0f2f4;
+  }
+
+  .deret-market-row:last-child {
+    border-bottom: 0;
+  }
+
+  .deret-market-row > div:first-child {
+    display: flex;
+    align-items: center;
+  }
+
+  .deret-market-status {
+    margin-top: 0;
+  }
+
+  .deret-market-active {
+    margin: 9px 8px 7px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .deret-market-heading {
+    padding: 11px 10px;
+  }
+
+  .deret-market-active {
+    margin: 8px;
+    padding: 9px;
+  }
+
+  .deret-market-active > div > span {
+    font-size: 14px;
+  }
+
+  .deret-market-active > strong {
+    font-size: 12px;
+  }
+
+  .deret-market-countdown {
+    margin: 7px 8px 8px;
+  }
+
+  .deret-market-countdown-time {
+    font-size: 16px;
+  }
+
+  .deret-market-results {
+    padding: 9px;
+  }
+}
+
+/* =========================================================
    INVESTMENT GRID
 ========================================================= */
 
 .deret-invest-list {
+  grid-column: 1 / -1;
+
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 9px;
+
+  min-width: 0;
 }
 
 /* =========================================================
@@ -501,11 +1239,13 @@
 ========================================================= */
 
 .deret-total-info {
+  grid-column: 1 / -1;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 8px;
+
   padding: 9px 11px;
   border: 1px solid #dce1e5;
   border-radius: 8px;
@@ -540,10 +1280,13 @@
 ========================================================= */
 
 .deret-results {
+  grid-column: 1 / -1;
+
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 8px;
+
+  min-width: 0;
 }
 
 .deret-result-card {
@@ -764,32 +1507,118 @@
    RESPONSIVE
 ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .deret-container {
+    width: min(1100px, 100%);
+  }
+
+  .deret-workspace {
+    grid-template-columns: minmax(0, 1fr) 205px;
+  }
+
   .deret-main-grid {
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 230px minmax(0, 1fr);
+  }
+
+  .deret-matrix {
+    grid-template-columns: 26px repeat(10, minmax(27px, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  /*
+     Workspace berubah menjadi satu kolom.
+     Main Grid tetap menjadi dua kolom.
+  */
+
+  .deret-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .deret-main-grid {
+    grid-template-columns: 230px minmax(0, 1fr);
+  }
+
+  /*
+     Right Grid berada di bawah Main Grid.
+  */
+
+  .deret-market-panel {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
   }
 
   .deret-invest-list,
   .deret-results {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  /*
+     Market list tetap vertikal pada breakpoint ini
+     agar desain market lama tetap terjaga.
+  */
+
+  .deret-market-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .deret-market-row {
+    min-height: 38px;
+    border-right: 1px solid #f0f2f4;
+    border-bottom: 0;
+  }
+
+  .deret-market-row:last-child {
+    border-right: 0;
+  }
 }
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
 
 @media (max-width: 720px) {
   .deret-main-grid {
     grid-template-columns: 1fr;
   }
 
-  .deret-matrix {
-    grid-template-columns: 28px repeat(10, minmax(28px, 1fr));
-    grid-template-rows: 28px repeat(10, 28px);
-  }
-
   .deret-left {
     grid-template-columns: 1fr 1fr;
     align-items: start;
   }
+
+  .deret-market-list {
+    grid-template-columns: 1fr;
+  }
+
+  .deret-market-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 34px;
+    border-right: 0;
+    border-bottom: 1px solid #f0f2f4;
+  }
+
+  .deret-market-row:last-child {
+    border-bottom: 0;
+  }
+
+  .deret-market-results {
+    padding-top: 9px;
+  }
+
+  .deret-matrix {
+    grid-template-columns: 28px repeat(10, minmax(28px, 1fr));
+    grid-template-rows: 28px repeat(10, 28px);
+  }
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 560px) {
   .deret-page {
@@ -830,10 +1659,18 @@
     min-width: 350px;
   }
 
+  .deret-market-countdown-time {
+    font-size: 15px;
+  }
+
   .deret-total-info {
     padding: 9px 10px;
   }
 }
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
 
 @media (max-width: 400px) {
   .deret-header {
@@ -854,5 +1691,28 @@
 
   .deret-invest-count {
     font-size: 12px;
+  }
+
+  .deret-market-countdown {
+    margin: 7px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .deret-reset,
+  .deret-copy,
+  .deret-balance-button,
+  .matrix-header,
+  .matrix-cell,
+  .deret-market-row,
+  .deret-input-wrap,
+  .deret-modal-close,
+  .deret-modal-cancel,
+  .deret-modal-save {
+    transition: none;
   }
 }
