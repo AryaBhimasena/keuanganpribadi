@@ -1,0 +1,88 @@
+.spekulasi-page{--bg:#eef0f2;--card:#fff;--dark:#171a1d;--dark2:#24282c;--text:#171a1d;--muted:#7d848b;--line:#dfe2e5;--green:#167b4b;--green-bg:#edf8f2;--red:#c33b3b;--red-bg:#fdf0f0;min-height:100vh;background:var(--bg);color:var(--text);padding:18px 22px;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
+.spekulasi-shell{width:min(1380px,100%);height:calc(100vh - 36px);margin:auto;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:12px}
+.spekulasi-header{display:flex;align-items:center;justify-content:space-between;height:50px}
+.spekulasi-kicker{display:block;color:var(--muted);font-size:9px;font-weight:850;letter-spacing:.16em}
+.spekulasi-header h1{margin:3px 0 0;font-size:27px;line-height:1;font-weight:850;letter-spacing:-.045em}
+.spekulasi-reset{height:34px;padding:0 15px;border:1px solid #cbd0d4;border-radius:6px;background:var(--card);color:var(--text);font-size:10px;font-weight:800;cursor:pointer}
+
+/* =====================================================
+   DASHBOARD / HEADER
+===================================================== */
+.spekulasi-dashboard{display:grid;grid-template-columns:2.1fr 1fr 1.35fr .8fr;min-height:116px;overflow:hidden;border:1px solid #d6dade;border-radius:9px;background:#fff;color:var(--text)}
+.spekulasi-bankroll,.spekulasi-metric{display:flex;flex-direction:column;justify-content:center;padding:18px 24px}
+.spekulasi-bankroll{background:#fff}
+.spekulasi-metric{border-left:1px solid var(--line);background:#fafbfb}
+.spekulasi-label{margin-bottom:7px;color:var(--muted);font-size:9px;font-weight:850;letter-spacing:.14em}
+.spekulasi-bankroll strong{font-size:36px;line-height:1;font-weight:900;letter-spacing:-.055em;font-variant-numeric:tabular-nums;color:var(--text)}
+.spekulasi-bankroll small{display:flex;align-items:center;gap:6px;width:max-content;margin-top:10px;padding:5px 8px;border-radius:5px;font-size:11px;font-weight:850;line-height:1;font-variant-numeric:tabular-nums}
+.spekulasi-bankroll small.up{background:var(--green-bg);color:var(--green)}
+.spekulasi-bankroll small.down{background:var(--red-bg);color:var(--red)}
+.spekulasi-metric strong{font-size:24px;line-height:1.1;font-weight:850;letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:var(--text)}
+.spekulasi-dashboard small{margin-top:6px;color:var(--muted);font-size:10px}
+.spekulasi-dashboard .up{color:var(--green)}.spekulasi-dashboard .down{color:var(--red)}
+
+.spekulasi-workspace{display:grid;grid-template-columns:360px minmax(0,1fr);gap:12px;min-height:0}
+.spekulasi-panel,.spekulasi-history-panel{min-height:0;border:1px solid var(--line);border-radius:9px;background:var(--card)}
+.spekulasi-panel{padding:19px;display:flex;flex-direction:column}
+.spekulasi-panel-title{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.spekulasi-panel-title span{color:var(--muted);font-size:9px;font-weight:850;letter-spacing:.15em}
+.spekulasi-panel-title b{font-size:14px;letter-spacing:-.02em}
+.spekulasi-field-label{display:block;margin-bottom:7px;color:var(--muted);font-size:9px;font-weight:850;letter-spacing:.12em}
+.spekulasi-input,.spekulasi-bet-input{display:flex;align-items:center;height:48px;border:1px solid #cfd3d7;border-radius:6px;background:#fff}
+.spekulasi-input>span,.spekulasi-bet-input>span{padding-left:13px;color:var(--muted);font-size:11px;font-weight:750}
+.spekulasi-input input,.spekulasi-bet-input input{width:100%;height:46px;padding:0 10px;border:0;outline:0;background:transparent;color:var(--text);font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.spekulasi-input button{height:32px;margin-right:7px;padding:0 10px;border:0;border-radius:4px;background:var(--dark);color:#fff;font-size:9px;font-weight:850;cursor:pointer}
+.spekulasi-divider{height:1px;margin:16px 0;background:#eceeef}
+.spekulasi-result-buttons{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:15px}
+.spekulasi-result-buttons button{height:48px;border:1px solid var(--line);border-radius:6px;background:#f7f8f9;color:#737a81;cursor:pointer}
+.spekulasi-result-buttons b{display:block;font-size:15px}.spekulasi-result-buttons span{font-size:8px;font-weight:850;letter-spacing:.13em}
+.spekulasi-result-buttons .active.win{border-color:#9ad2b4;background:var(--green-bg);color:var(--green)}
+.spekulasi-result-buttons .active.loss{border-color:#e3a3a3;background:var(--red-bg);color:var(--red)}
+.spekulasi-auto-bet{height:32px;margin-top:7px;border:0;background:transparent;color:var(--muted);font-size:9px;font-weight:750;text-align:left;cursor:pointer}
+.spekulasi-auto-bet:hover{color:var(--text)}
+.spekulasi-add{height:46px;margin-top:8px;border:0;border-radius:6px;background:var(--dark);color:#fff;font-size:10px;font-weight:850;letter-spacing:.08em;cursor:pointer}
+.spekulasi-add span{float:right;color:#777e85;font-size:12px}
+.spekulasi-live{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding:12px 13px;border-radius:6px;background:#f5f6f7}
+.spekulasi-live span{color:var(--muted);font-size:8px;font-weight:850;letter-spacing:.1em}
+.spekulasi-live b{font-size:12px;font-variant-numeric:tabular-nums}
+.spekulasi-history-panel{display:flex;flex-direction:column;overflow:hidden}
+.spekulasi-history-head{display:flex;align-items:center;justify-content:space-between;padding:17px 20px;border-bottom:1px solid var(--line)}
+.spekulasi-history-head h2{margin:3px 0 0;font-size:18px;line-height:1;font-weight:850;letter-spacing:-.035em}
+.spekulasi-history-summary{display:flex;gap:12px;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.08em}
+
+/* =====================================================
+   HISTORY SCROLL
+===================================================== */
+.spekulasi-table-scroll{min-height:0;flex:1;overflow:auto;scrollbar-width:thin;scrollbar-color:#c5cbd0 #f1f3f4}
+.spekulasi-table-scroll::-webkit-scrollbar{width:7px;height:7px}
+.spekulasi-table-scroll::-webkit-scrollbar-track{background:#f1f3f4;border-radius:10px}
+.spekulasi-table-scroll::-webkit-scrollbar-thumb{background:#c5cbd0;border:2px solid #f1f3f4;border-radius:10px}
+.spekulasi-table-scroll::-webkit-scrollbar-thumb:hover{background:#9da5ac}
+.spekulasi-table-scroll::-webkit-scrollbar-corner{background:#f1f3f4}
+
+.spekulasi-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.spekulasi-table th{position:sticky;top:0;z-index:1;padding:10px 15px;border-bottom:1px solid var(--line);background:#f7f8f9;color:var(--muted);font-size:8px;font-weight:850;letter-spacing:.11em;text-align:right;white-space:nowrap}
+.spekulasi-table th:first-child,.spekulasi-table th:nth-child(2){text-align:center}
+.spekulasi-table td{padding:9px 15px;border-bottom:1px solid #eef0f1;color:#656c73;font-size:11px;text-align:right;white-space:nowrap}
+.spekulasi-table td:first-child,.spekulasi-table td:nth-child(2){text-align:center;color:var(--text);font-weight:750}
+.spekulasi-table tbody tr:hover{background:#fafbfb}
+.spekulasi-table .ending{color:var(--text);font-weight:850}
+.spekulasi-table .up{color:var(--green);font-weight:750}.spekulasi-table .down{color:var(--red);font-weight:750}
+.result-dot{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:5px;font-size:9px;font-style:normal;font-weight:850}
+.result-dot.win{background:var(--green-bg);color:var(--green)}.result-dot.loss{background:var(--red-bg);color:var(--red)}
+.spekulasi-empty{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;color:var(--muted);text-align:center}
+.spekulasi-empty b{color:var(--text);font-size:13px}.spekulasi-empty span{font-size:11px}
+.spekulasi-footer{display:flex;align-items:center;min-height:45px;padding:0 14px;border:1px solid var(--line);border-radius:7px;background:var(--card)}
+.spekulasi-footer div{display:flex;align-items:baseline;gap:6px;padding:0 16px;border-right:1px solid var(--line)}
+.spekulasi-footer span{font-size:13px;font-weight:850}.spekulasi-footer small{color:var(--muted);font-size:8px;font-weight:750}
+.spekulasi-footer p{margin:0 0 0 auto;color:var(--muted);font-size:9px}
+
+@media(max-width:1000px){
+.spekulasi-page{overflow:auto}.spekulasi-shell{height:auto;min-height:calc(100vh - 36px);grid-template-rows:auto auto auto auto}.spekulasi-dashboard{grid-template-columns:1.5fr 1fr 1fr}.spekulasi-dashboard .spekulasi-metric:last-child{display:none}.spekulasi-workspace{grid-template-columns:300px minmax(0,1fr);min-height:520px}
+}
+@media(max-width:760px){
+.spekulasi-page{padding:12px}.spekulasi-shell{width:100%;min-height:calc(100vh - 24px);gap:9px}.spekulasi-dashboard{grid-template-columns:1fr 1fr}.spekulasi-bankroll{grid-column:1/-1}.spekulasi-metric:nth-child(3){border-left:0;border-top:1px solid var(--line)}.spekulasi-metric:nth-child(4){display:flex;border-top:1px solid var(--line)}.spekulasi-workspace{grid-template-columns:1fr;min-height:680px}.spekulasi-panel{min-height:390px}.spekulasi-history-panel{min-height:400px}.spekulasi-footer{overflow:hidden}.spekulasi-footer p{display:none}
+}
+@media(max-width:480px){
+.spekulasi-header h1{font-size:24px}.spekulasi-dashboard{grid-template-columns:1fr 1fr}.spekulasi-bankroll strong{font-size:28px}.spekulasi-bankroll small{font-size:10px}.spekulasi-metric strong{font-size:20px}.spekulasi-bankroll,.spekulasi-metric{padding:15px}.spekulasi-panel{padding:15px}.spekulasi-history-head{padding:14px}.spekulasi-history-summary{display:none}.spekulasi-footer div{padding:0 10px}.spekulasi-table{min-width:720px}
+}
